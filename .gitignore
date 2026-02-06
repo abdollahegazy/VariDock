@@ -6,6 +6,8 @@ __pycache__/
 # C extensions
 *.so
 
+sandbox/
+
 # Distribution / packaging
 .Python
 build/

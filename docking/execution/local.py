@@ -18,6 +18,19 @@ class LocalExecutor:
         if write_only:
             return CompletedRun(returncode=0, argv=plan.argv, stdout="", stderr="")
 
+        try:
+            self.validator.validate(plan)
+            # If we reach here, outputs already look good → skip execution
+            return CompletedRun(
+                returncode=0,
+                argv=plan.argv,
+                stdout="(skipped: outputs already valid)",
+                stderr="",
+            )
+        except Exception:
+            # Not valid yet → fall through and actually run
+            pass
+        
         result = self.runner.run(plan)
         if result.returncode != 0:
             raise RuntimeError(

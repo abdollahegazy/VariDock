@@ -3,22 +3,20 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
+import os
 
 from docking.io import build_af3_input_json
 from docking.jobs import PredictionJob
 from docking.plans import RunPlan
 from docking.runners.base import StructurePredictionRunner
 
-
 @dataclass(frozen=True)
 class AF3Config:
-    # Host paths
     sif_path: Path
     model_dir: Path
     db_dir: Path
-    # How to run inside the container
-    
-    runner_script: str  # path to run.py
+    runner_script: Path
+
     python_entrypoint: str = "python"
 
     # Inside-container mount points
@@ -26,12 +24,21 @@ class AF3Config:
     container_output_dir: str = "/root/af_output"
     container_model_dir: str = "/root/models"
     container_db_dir: str = "/root/public_databases"
-    container_runner_dir: str = "/root/runner" 
+    container_runner_dir: str = "/root/runner"
 
     # Flags
     use_nv: bool = True
     norun_data_pipeline: bool = False
     extra_args: Sequence[str] = ()
+
+    @classmethod
+    def from_env(cls) -> "AF3Config":
+        return cls(
+            sif_path=Path(os.environ["AF3_SIF_PATH"]),
+            model_dir=Path(os.environ["AF3_MODEL_DIR"]),
+            db_dir=Path(os.environ["AF3_DB_DIR"]),
+            runner_script=Path(os.environ["AF3_RUNNER_SCRIPT"]),
+        )
 
 class AF3Runner(StructurePredictionRunner):
     name = "af3"
@@ -57,6 +64,8 @@ class AF3Runner(StructurePredictionRunner):
 
         files_text = {
             json_host_path: build_af3_input_json(job),
+            output_dir / ".keep": "",  # ensure output dir exists
+            input_dir / ".keep": "",  # ensure input dir exists
         }
 
         argv = ["singularity", "exec"]
@@ -89,7 +98,9 @@ class AF3Runner(StructurePredictionRunner):
 
         argv += list(self.cfg.extra_args)
 
-        expected_outputs = [output_dir / f"{job.name}_model.cif"] # at least one output
+        expected_outputs = [output_dir 
+        / job.name.lower()
+        / f"{job.name.lower()}_model.cif"] # at least one output
 
         return RunPlan(
             work_dir=job.output_dir,
