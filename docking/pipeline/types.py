@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 @dataclass
@@ -13,6 +13,8 @@ class CIF:
 @dataclass
 class PDB:
     path: Path
+    #source CIf path (useful if converted from CIF like from AF3)
+    source_cif: Path | None = None  
 
 @dataclass
 class PDBQT:
@@ -27,13 +29,26 @@ class NAMDSimulationDir:
     path: Path  # contains system.psf, system.pdb, system.xsc, eq.namd, etc.
 
 @dataclass
-class Trajectory:
+class SLURMPending:
+    """Mixin for types that can represent pending SLURM jobs."""
+    job_id: int | None = field(default=None, kw_only=True)
+
+
+@dataclass
+class NAMDCheckpoint(SLURMPending):
+    path: Path
+    restart_prefix: str  # "eq", "eq2", etc.
+    
+@dataclass
+class Trajectory(SLURMPending):
     psf: Path
+    pdb: Path
     coor_files: list[Path]
 
 
 @dataclass
 class ConformationSet:
+    psf: Path
     pdbs: list[PDB]
 
 

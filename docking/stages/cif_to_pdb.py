@@ -37,4 +37,4 @@ class CIFToPDB(Stage[CIF, PDB]):
 
         run_with_interrupt(["obabel", str(input.path), "-O", str(pdb_path)])
 
-        return PDB(path=pdb_path)
+        return PDB(path=pdb_path, source_cif=input.path)
