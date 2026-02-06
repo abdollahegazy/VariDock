@@ -1,0 +1,20 @@
+import pytest
+from pathlib import Path
+
+
+@pytest.fixture
+def fixtures_dir() -> Path:
+    """Return path to test fixtures directory."""
+    return Path(__file__).parent / "fixtures"
+
+
+@pytest.fixture
+def sample_cif(fixtures_dir) -> Path:
+    """Return path to sample CIF file."""
+    return fixtures_dir / "a0a1i9lq74.cif"
+
+
+@pytest.fixture
+def sample_expected_pdb_from_cif(fixtures_dir) -> Path:
+    """Return path to expected PDB output from CIF input."""
+    return fixtures_dir / "a0a1i9lq74_from_cif.pdb"

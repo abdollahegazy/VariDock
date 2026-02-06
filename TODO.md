@@ -1,0 +1,3 @@
+- make stand alone docking stages
+- rename docking to varidock in import
+- standardize test directory
