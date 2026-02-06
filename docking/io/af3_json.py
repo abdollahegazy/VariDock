@@ -1,8 +1,17 @@
 import json
 
-from docking.protocols import AF3PredictionProtocol
+from pathlib import Path
+from typing import Protocol, Sequence, Optional
 
-###remkae this function to not need prediction job
+
+class AF3PredictionProtocol(Protocol):
+    job_name: str
+    seed: int = 42
+    protein_sequences: Sequence[str]
+    protein_chain_ids: Sequence[str]
+    ligand_smiles: Optional[str]
+    ligand_id: Optional[str]
+    msa_paths: Optional[Sequence[Path]]  # if AF3 JSON consumes this
 
 def build_af3_input_json(job: AF3PredictionProtocol) -> str:
     if len(job.protein_sequences) != len(job.protein_chain_ids):

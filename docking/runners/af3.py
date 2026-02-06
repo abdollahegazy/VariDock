@@ -26,10 +26,8 @@ class AF3Config:
     container_db_dir: str = "/root/public_databases"
     container_runner_dir: str = "/root/runner"
 
-    # Flags
-    use_nv: bool = True
-    norun_data_pipeline: bool = False
-    extra_args: Sequence[str] = ()
+    singularity_args: Sequence[str] = ("--nv",)
+    script_args: Sequence[str] = ()
 
     @classmethod
     def from_env(cls) -> "AF3Config":
@@ -69,8 +67,7 @@ class AF3Runner(StructurePredictionRunner):
         }
 
         argv = ["singularity", "exec"]
-        if self.cfg.use_nv:
-            argv.append("--nv")
+        argv += list(self.cfg.singularity_args)
 
         argv += [
             "--bind",
@@ -91,12 +88,8 @@ class AF3Runner(StructurePredictionRunner):
             f"--db_dir={self.cfg.container_db_dir}",
             f"--output_dir={self.cfg.container_output_dir}",
         ]
+        argv += list(self.cfg.script_args)
 
-
-        if self.cfg.norun_data_pipeline:
-            argv.append("--norun_data_pipeline")
-
-        argv += list(self.cfg.extra_args)
 
         expected_outputs = [output_dir 
         / job.name.lower()

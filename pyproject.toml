@@ -19,6 +19,7 @@ dependencies = []
 [project.optional-dependencies]
 dev = [
   "pytest>=8",
+  "boltz>=0.1.0",
 ]
 
 [tool.hatch.build.targets.wheel]

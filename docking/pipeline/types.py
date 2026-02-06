@@ -7,6 +7,10 @@ class ProteinSequence:
     name: str
 
 @dataclass
+class CIF:
+    path: Path
+
+@dataclass
 class PDB:
     path: Path
 
