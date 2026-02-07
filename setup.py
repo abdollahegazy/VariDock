@@ -7,7 +7,7 @@ setup(
     description="Docker Automation",
     extras_require={
         "dev": [
-            "pytest",
+            "pytest>=8",
             "ruff",
             "mypy",
             "pdoc",
