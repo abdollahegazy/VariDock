@@ -80,11 +80,6 @@ class Ligand:
     name: str
 
 @dataclass
-class DockingResult:
-    output_path: Path
-    scores: Sequence[float]
-
-@dataclass
 class DeepSurfPocketResult:
     pocket_dir: Path
     centers_file: Path
@@ -104,3 +99,11 @@ class DockingInput:
     receptor: PDBQT
     ligand: PDBQT
     pocket_center: PocketCenter
+    conf_index: int
+    pose_index: int
+
+
+@dataclass
+class DockingResult:
+    output_path: Path
+    scores: Sequence[float]
