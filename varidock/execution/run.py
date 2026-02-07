@@ -4,7 +4,7 @@ import os
 import subprocess
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Optional, Sequence, Mapping
+from typing import Optional, Sequence
 
 from varidock.plans import RunPlan
 

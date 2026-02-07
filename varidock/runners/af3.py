@@ -3,7 +3,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
-import os
 
 from varidock.io import build_af3_input_json
 from varidock.jobs import PredictionJob

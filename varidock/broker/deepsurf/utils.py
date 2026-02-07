@@ -30,7 +30,8 @@ def readSurfPoints(surf_file):
     with open(surf_file,'r') as f:
         lines = f.readlines()
     
-    lines = [l for l in lines if len(l.split())>7]
+    lines = [line for line in lines if len(line.split())>7]
+    
     if len(lines)>100000:
         warnings.warn('{} has too many points'.format(surf_file))
         return
@@ -40,8 +41,8 @@ def readSurfPoints(surf_file):
     
     coords = np.zeros((len(lines),3))
     normals = np.zeros((len(lines),3))
-    for i,l in enumerate(lines):
-        parts = l.split()
+    for i,line in enumerate(lines):
+        parts = line.split()
         try:
             coords[i,0] = float(parts[3])
             coords[i,1] = float(parts[4])
@@ -49,13 +50,13 @@ def readSurfPoints(surf_file):
             normals[i,0] = float(parts[8])
             normals[i,1] = float(parts[9])
             normals[i,2] = float(parts[10])
-        except:
-            coords[i,0] = float(parts[2][-8:])
-            coords[i,1] = float(parts[3])
-            coords[i,2] = float(parts[4])
-            normals[i,0] = float(parts[7])
-            normals[i,1] = float(parts[8])
-            normals[i,2] = float(parts[9])
+        except (IndexError, ValueError):
+            coords[i, 0] = float(parts[2][-8:])
+            coords[i, 1] = float(parts[3])
+            coords[i, 2] = float(parts[4])
+            normals[i, 0] = float(parts[7])
+            normals[i, 1] = float(parts[8])
+            normals[i, 2] = float(parts[9])
             
     return coords, normals
 

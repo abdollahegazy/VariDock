@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from varidock.pipeline.types import PDB, PDBQT, Ligand, LigandPrepInput
+from varidock.pipeline.types import PDBQT, Ligand, LigandPrepInput
 from varidock.pipeline.stage import Stage
 from varidock.broker.meeko import prepare_ligand
 
