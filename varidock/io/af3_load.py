@@ -6,8 +6,7 @@ from varidock.structure import MSAData
 
 
 def extract_msas_from_af3_output(af3_output_dir: Path) -> dict[str, MSAData]:
-    """
-    Extract MSA data for all proteins in an AF3 output directory.
+    """Extract MSA data for all proteins in an AF3 output directory.
 
     Returns: {chain_id: MSAData}
     """

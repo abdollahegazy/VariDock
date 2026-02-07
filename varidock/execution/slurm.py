@@ -14,8 +14,7 @@ def _sbatch(script: Path, depends_on: int | None = None) -> int:
     return int(result.stdout.strip())
 
 def get_slurm_queue_count() -> int:
-    """
-    Count current user's pending + running jobs.
+    """Count current user's pending + running jobs.
     """
     result = subprocess.run(
         ["squeue", "--me", "-h", "--format=%i"],

@@ -45,7 +45,6 @@ class NAMDEq2(Stage[NAMDCheckpoint, NAMDCheckpoint]):
         self, input: NAMDCheckpoint, depends_on: int | None = None
     ) -> NAMDCheckpoint:
         """Submit eq2.sh to SLURM, return job ID."""
-
         dep = depends_on if depends_on is not None else input.job_id
         job_id = _sbatch(input.path / "eq2.sh", dep)
         return NAMDCheckpoint(path=input.path, restart_prefix="eq2", job_id=job_id)

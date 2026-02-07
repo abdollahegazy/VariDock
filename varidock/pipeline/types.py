@@ -37,6 +37,7 @@ class NAMDSimulationDir:
 @dataclass
 class SLURMPending:
     """Mixin for types that can represent pending SLURM jobs."""
+
     job_id: int | None = field(default=None, kw_only=True)
 
 

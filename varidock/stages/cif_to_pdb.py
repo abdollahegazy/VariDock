@@ -12,14 +12,14 @@ class CIFToPDBConfig:
 
     Attributes:
         output_dir: Directory to write PDB file. If None, writes next to input CIF.
+
     """
 
     output_dir: Path | None = None
 
 
 class CIFToPDB(Stage[CIF, PDB]):
-    """
-    Convert CIF structure file to PDB format using Open Babel.
+    """Convert CIF structure file to PDB format using Open Babel.
     """
 
     name = "cif_to_pdb"

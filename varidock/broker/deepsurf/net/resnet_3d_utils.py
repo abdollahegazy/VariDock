@@ -1,7 +1,6 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Nov  1 17:04:52 2018
+"""Created on Thu Nov  1 17:04:52 2018
 
 @author: smylonas
 """
@@ -43,6 +42,7 @@ def subsample(inputs, factor, scope=None):
 
     Returns:
       output: A `Tensor`with the input, either intact (if factor == 1) or subsampled (if factor > 1).
+
     """
     if factor == 1:
         return inputs
@@ -93,6 +93,7 @@ def conv3d_same(
     Returns:
       output: A 4-D tensor of size [batch, height_out, width_out, channels] with
         the convolution output.
+
     """
     if stride == 1:
         return layers.conv3d(
@@ -187,6 +188,7 @@ def stack_blocks_dense(net, blocks, output_stride=None, outputs_collections=None
 
     Raises:
       ValueError: If the target output_stride is not valid.
+
     """
     # The current_stride variable keeps track of the effective stride of the
     # activations. This allows us to invoke atrous convolution whenever applying
@@ -244,6 +246,7 @@ def resnet_arg_scope(
 
     Returns:
       An `arg_scope` to use for the resnet models.
+
     """
     batch_norm_params = {
         "is_training": is_training,

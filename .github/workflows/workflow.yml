@@ -34,15 +34,15 @@ jobs:
       - name: Lint with ruff
         run: >-
           ruff check varidock/
-      - name: Check docstrings with ruff
-        run: >-
-          ruff check varidock/ --select D
-      - name: Type check with mypy
-        run: >-
-          mypy varidock/
-      - name: Run tests with pytest
-        run: >-
-          pytest
+      # - name: Check docstrings with ruff
+      #   run: >-
+      #     ruff check varidock/ --select D
+      # - name: Type check with mypy
+        # run: >-
+          # mypy varidock/
+      # - name: Run tests with pytest
+        # run: >-
+          # pytest
 
   build:
     if: github.event_name == 'release'

@@ -1,5 +1,4 @@
-"""
-Created on Wed Jan  2 13:35:32 2019
+"""Created on Wed Jan  2 13:35:32 2019
 
 @author: smylonas
 """
@@ -65,6 +64,7 @@ def resnet_v1(inputs,
               reuse=None,
               scope=None):
   """Generator for v1 ResNet models.
+
   Args:
     inputs: A tensor of size [batch, height_in, width_in, channels].
     blocks: A list of length equal to the number of ResNet blocks. Each element
@@ -82,6 +82,7 @@ def resnet_v1(inputs,
     reuse: whether or not the network and its variables should be reused. To be
       able to reuse 'scope' must be given.
     scope: Optional variable_scope.
+
   Returns:
     net: A rank-4 tensor of size [batch, height_out, width_out, channels_out].
       If global_pool is False, then height_out and width_out are reduced by a
@@ -92,8 +93,10 @@ def resnet_v1(inputs,
       activations.
     end_points: A dictionary from components of the network to the corresponding
       activation.
+
   Raises:
     ValueError: If the target output_stride is not valid.
+
   """
   with variable_scope.variable_scope(
       scope, 'resnet_v1', [inputs], reuse=reuse) as sc:
@@ -133,8 +136,10 @@ def resnet_block(scope, depth_out, num_units, stride):
     num_units: The number of units in the block.
     stride: The stride of the block, implemented as a stride in the last unit.
       All other units have stride=1.
+
   Returns:
     A resnet_v1 bottleneck block.
+
   """
   return resnet_3d_utils.Block(scope, bottleneck, [{
       'depth_out': depth_out,

@@ -1,5 +1,4 @@
-"""
-Original source of this file:
+"""Original source of this file:
 from https://gitlab.com/cheminfIBB/tfbio
 """
 
@@ -31,13 +30,13 @@ class Featurizer():
         Callables used to calculcate custom atomic properties
     SMARTS: list of SMARTS strings
         SMARTS patterns defining additional atomic properties
+
     """
 
     def __init__(self, atom_codes=None, atom_labels=None,
                  named_properties=None, save_molecule_codes=True,
                  custom_properties=None, smarts_properties=None,
                  smarts_labels=None):
-
         """Creates Featurizer with specified types of features. Elements of a
         feature vector will be in a following order: atom type encoding
         (defined by atom_codes), Pybel atomic properties (defined by
@@ -83,8 +82,8 @@ class Featurizer():
             length as `smarts_properties`. If not specified labels 'smarts0',
             'smarts1' etc are used. If `smarts_properties` is not specified
             this argument is ignored.
-        """
 
+        """
         # Remember namse of all features in the correct order
         self.FEATURE_NAMES = []
 
@@ -220,8 +219,8 @@ class Featurizer():
         -------
         encoding: np.ndarray
             Binary vector encoding atom type (one-hot or null).
-        """
 
+        """
         if not isinstance(atomic_num, int):
             raise TypeError('Atomic number must be int, %s was given'
                             % type(atomic_num))
@@ -246,8 +245,8 @@ class Featurizer():
             NxM binary array, where N is the number of atoms in the `molecule`
             and M is the number of patterns. `features[i, j]` == 1.0 if i'th
             atom has j'th property
-        """
 
+        """
         if not isinstance(molecule, pybel.Molecule):
             raise TypeError('molecule must be pybel.Molecule object, %s was given'
                             % type(molecule))
@@ -280,8 +279,8 @@ class Featurizer():
             (one-hot encoding), pybel.Atom attributes, type of a molecule
             (e.g protein/ligand distinction), and other properties defined with
             SMARTS patterns
-        """
 
+        """
         if not isinstance(molecule, pybel.Molecule):
             raise TypeError('molecule must be pybel.Molecule object,'
                             ' %s was given' % type(molecule))
@@ -330,8 +329,8 @@ class Featurizer():
         ----------
         fname: str, optional
            Path to file in which featurizer will be saved
-        """
 
+        """
         # patterns can't be pickled, we need to temporarily remove them
         patterns = self.__PATTERNS[:]
         del self.__PATTERNS
@@ -354,6 +353,7 @@ class Featurizer():
         -------
         featurizer: Featurizer object
            Loaded featurizer
+
         """
         with open(fname, 'rb') as f:
             featurizer = pickle.load(f)
@@ -363,7 +363,6 @@ class Featurizer():
 
 def rotation_matrix(axis, theta):
     """Counterclockwise rotation about a given axis by theta radians"""
-
     if not isinstance(axis, (np.ndarray, list, tuple)):
         raise TypeError('axis must be an array of floats of shape (3,)')
     try:
@@ -433,8 +432,8 @@ def rotate(coords, rotation):
     -------
     coords: np.ndarray, shape = (N, 3)
         Rotated coordinates.
-    """
 
+    """
     global ROTATIONS
 
     if not isinstance(coords, (np.ndarray, list, tuple)):
@@ -481,8 +480,8 @@ def make_grid(coords, features, grid_resolution=1.0, max_dist=10.0):
     coords: np.ndarray, shape = (M, M, M, F)
         4D array with atom properties distributed in 3D space. M is equal to
         2 * `max_dist` / `grid_resolution` + 1
-    """
 
+    """
     try:
         coords = np.asarray(coords, dtype=float)
     except ValueError:

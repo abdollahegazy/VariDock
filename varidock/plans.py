@@ -5,8 +5,7 @@ from typing import Mapping, Sequence, Optional
 
 @dataclass(frozen=True)
 class RunPlan:
-    """
-    Declarative description of a system-level run.
+    """Declarative description of a system-level run.
 
     The executor is responsible for:
     - writing files

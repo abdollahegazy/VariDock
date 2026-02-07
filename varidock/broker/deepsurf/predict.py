@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Jan 20 16:16:56 2020
+"""Created on Mon Jan 20 16:16:56 2020
 @author: smylonas
 """
 

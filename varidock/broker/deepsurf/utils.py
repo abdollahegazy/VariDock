@@ -1,5 +1,4 @@
-"""
-Created on Tue Jul 30 13:39:49 2019
+"""Created on Tue Jul 30 13:39:49 2019
 
 @author: smylonas
 """

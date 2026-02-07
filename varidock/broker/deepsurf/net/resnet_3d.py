@@ -1,5 +1,4 @@
-"""
-Created on Thu Nov  1 12:04:04 2018
+"""Created on Thu Nov  1 12:04:04 2018
 
 @author: smylonas
 """
@@ -29,6 +28,7 @@ def resid_unit(inputs,
   its definition. 
   When putting together two consecutive ResNet blocks that use this unit, one
   should use stride = 2 in the last unit of the first block.
+
   Args:
     inputs: A tensor of size [batch, height, width, channels].
     depth: The depth of the ResNet unit output.
@@ -38,8 +38,10 @@ def resid_unit(inputs,
     rate: An integer, rate for atrous convolution.
     outputs_collections: Collection to add the ResNet unit output.
     scope: Optional variable_scope.
+
   Returns:
     The ResNet unit's output.
+
   """
   with variable_scope.variable_scope(scope, 'resid_v1', [inputs]) as sc:
    # print (inputs.shape)
@@ -72,6 +74,7 @@ def resnet_v1(inputs,
               reuse=None,
               scope=None):
   """Generator for v1 ResNet models.
+
   Args:
     inputs: A tensor of size [batch, height_in, width_in, channels].
     blocks: A list of length equal to the number of ResNet blocks. Each element
@@ -89,6 +92,7 @@ def resnet_v1(inputs,
     reuse: whether or not the network and its variables should be reused. To be
       able to reuse 'scope' must be given.
     scope: Optional variable_scope.
+
   Returns:
     net: A rank-4 tensor of size [batch, height_out, width_out, channels_out].
       If global_pool is False, then height_out and width_out are reduced by a
@@ -99,8 +103,10 @@ def resnet_v1(inputs,
       activations.
     end_points: A dictionary from components of the network to the corresponding
       activation.
+
   Raises:
     ValueError: If the target output_stride is not valid.
+
   """
   with variable_scope.variable_scope(
       scope, 'resnet_v1', [inputs], reuse=reuse) as sc:
@@ -140,8 +146,10 @@ def resnet_v1_block(scope, depth_out, num_units, stride):
     num_units: The number of units in the block.
     stride: The stride of the block, implemented as a stride in the last unit.
       All other units have stride=1.
+
   Returns:
     A resnet_v1 bottleneck block.
+
   """
   return resnet_3d_utils.Block(scope, resid_unit, [{
       'depth': depth_out,
