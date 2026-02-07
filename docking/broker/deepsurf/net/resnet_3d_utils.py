@@ -18,7 +18,7 @@ from tf_slim.layers import utils
 from tensorflow.python.ops import array_ops
 from tensorflow.python.ops import nn_ops
 from tensorflow.python.ops import variable_scope
-from tensorflow.compat.v1 import GraphKeys
+from tensorflow.compat.v1 import GraphKeys # type: ignore
 
 class Block(collections.namedtuple("Block", ["scope", "unit_fn", "args"])):
     """A named tuple describing a ResNet block.

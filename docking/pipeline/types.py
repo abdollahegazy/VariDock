@@ -79,7 +79,6 @@ class Ligand:
     path: Path  # mol2 or pdb
     name: str
 
-
 @dataclass
 class DockingResult:
     output_path: Path
@@ -93,12 +92,12 @@ class DeepSurfPocketResult:
 
 # === Composite inputs for multi-input stages ===
 
-
 @dataclass
 class LigandPrepInput:
     ligand: Ligand
     pocket_center: PocketCenter
-
+    conf_index: int
+    pose_index: int
 
 @dataclass
 class DockingInput:

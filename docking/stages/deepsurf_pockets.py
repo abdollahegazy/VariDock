@@ -3,7 +3,7 @@ from pathlib import Path
 
 from docking.pipeline.types import PDB, DeepSurfPocketResult
 from docking.pipeline.stage import Stage
-from docking.deepsurf import predict
+from docking.broker.deepsurf import predict
 
 @dataclass
 class DeepSurfPocketConfig:
