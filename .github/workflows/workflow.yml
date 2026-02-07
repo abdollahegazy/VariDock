@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12"]
     permissions:
       contents: read
     
@@ -33,13 +33,13 @@ jobs:
           pip install .[dev]
       - name: Lint with ruff
         run: >-
-          ruff check pypi_template/
+          ruff check varidock/
       - name: Check docstrings with ruff
         run: >-
-          ruff check pypi_template/ --select D
+          ruff check varidock/ --select D
       - name: Type check with mypy
         run: >-
-          mypy pypi_template/
+          mypy varidock/
       - name: Run tests with pytest
         run: >-
           pytest
@@ -92,7 +92,7 @@ jobs:
           pip install .[dev]
       - name: Build pdoc documentation
         run: >-
-          pdoc -d google pypi_template/ -o _build/ --math 
+          pdoc -d google varidock/ -o _build/ --math 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -136,7 +136,7 @@ jobs:
     
     environment:
       name: pypi
-      url: https://pypi.org/p/pypi-template
+      url: https://pypi.org/p/varidock
     permissions:
       id-token: write
     steps:

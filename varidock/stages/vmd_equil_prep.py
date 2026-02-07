@@ -114,9 +114,11 @@ class VMDEquilPrep(Stage[PDB, NAMDSimulationDir]):
                 stderr=subprocess.STDOUT
             )
         shutil.copytree(self.config.toppar_dir, self.config.output_dir / "toppar", dirs_exist_ok=True)
-        shutil.copy(self.config.template_dir / "eq.namd", self.config.output_dir)
-        shutil.copy(self.config.template_dir / "eq2.namd", self.config.output_dir)
-        shutil.copy(self.config.template_dir / "run.namd", self.config.output_dir)
+
+        ## this should prob be an input to the stage, but for now we'll just copy the templates
+        shutil.copy(self.config.template_dir / "system_eq.namd", self.config.output_dir)
+        shutil.copy(self.config.template_dir / "system_eq2.namd", self.config.output_dir)
+        shutil.copy(self.config.template_dir / "system_run.namd", self.config.output_dir)
 
         for sh_file in ["eq.sh", "eq2.sh", "run.sh"]:
             src = self.config.template_dir / sh_file

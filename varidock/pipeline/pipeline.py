@@ -2,8 +2,10 @@ from varidock.pipeline.stage import Stage
 
 
 class Pipeline:
-    def __init__(self):
+    def __init__(self, *stages: Stage):
         self.stages: list[Stage] = []
+        for stage in stages:
+            self.add(stage)
 
     def add(self, stage: Stage) -> "Pipeline":
         if self.stages:

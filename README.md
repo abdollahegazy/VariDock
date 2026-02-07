@@ -4,12 +4,12 @@
 [![PyPI version shields.io](https://img.shields.io/pypi/v/neurop.svg)](https://pypi.python.org/pypi/pypi-template/)
 [![PyPI pyversions shields.io](https://img.shields.io/pypi/pyversions/neurop.svg)](https://pypi.python.org/pypi/pypi-template/)
 
-## About pypi-template
+## About varidock
+Docking automation.
 
 ## Usage
-`pypi-template` is published on [PyPi](https://pypi.python.org/pypi/pypi-template/) and can be installed using `pip` - 
 ```
-pip install pypi-template
+pip install varidock
 ```
 
 ## License
