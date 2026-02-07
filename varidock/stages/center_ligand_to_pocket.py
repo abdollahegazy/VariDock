@@ -3,8 +3,8 @@ from pathlib import Path
 import numpy as np
 
 
-from docking.pipeline.types import PDB, LigandPrepInput
-from docking.pipeline.stage import Stage
+from varidock.pipeline.types import PDB, Ligand, LigandPrepInput
+from varidock.pipeline.stage import Stage
 
 
 @dataclass
@@ -12,10 +12,10 @@ class CenterLigandConfig:
     output_dir: Path
 
 
-class CenterLigand(Stage[LigandPrepInput, PDB]):
+class CenterLigand(Stage[LigandPrepInput, LigandPrepInput]):
     name = "ligand_placement"
     input_type = LigandPrepInput
-    output_type = PDB
+    output_type = LigandPrepInput
 
     def __init__(self, config: CenterLigandConfig):
         self.config = config
@@ -42,7 +42,7 @@ class CenterLigand(Stage[LigandPrepInput, PDB]):
                     y = float(line[38:46])
                     z = float(line[46:54])
                     coords.append([x, y, z])
-
+        # print(coords,len(coords))
         coords = np.array(coords)
         centroid = coords.mean(axis=0)
         shift = np.array(center) - centroid
@@ -69,11 +69,21 @@ class CenterLigand(Stage[LigandPrepInput, PDB]):
             self.config.output_dir
             / f"ligand_c{input.conf_index}_p{input.pose_index}.pdb"
         )
+        output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        self._place_ligand(
-            ligand_file=str(ligand.path),
+        self.place_ligand(
+            ligand_file=str(ligand.pdb.path),
             output_file=str(output_path),
             center=(center.x, center.y, center.z),
         )
 
-        return PDB(path=output_path)
+        return LigandPrepInput(
+            ligand=Ligand(
+                name=ligand.name,
+                pdb=PDB(path=output_path),
+                pdbqt=None
+            ),
+            pocket_center=center,
+            conf_index=input.conf_index,
+            pose_index=input.pose_index,
+        )

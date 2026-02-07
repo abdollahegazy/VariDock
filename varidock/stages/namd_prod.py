@@ -2,10 +2,10 @@
 from dataclasses import dataclass
 import subprocess
 
-from docking.pipeline.types import NAMDCheckpoint, Trajectory
-from docking.pipeline.stage import Stage
-from docking.execution.utils import run_with_interrupt
-from docking.execution.slurm import _sbatch
+from varidock.pipeline.types import NAMDCheckpoint, Trajectory
+from varidock.pipeline.stage import Stage
+from varidock.execution.utils import run_with_interrupt
+from varidock.execution.slurm import _sbatch
 
 @dataclass
 class NAMDProductionConfig:

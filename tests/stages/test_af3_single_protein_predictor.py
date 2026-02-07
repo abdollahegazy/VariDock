@@ -2,8 +2,8 @@
 import pytest
 from unittest.mock import patch, MagicMock
 
-from docking.pipeline.types import ProteinSequence, CIF
-from docking.stages.af3_single_protein_predictor import (
+from varidock.pipeline.types import ProteinSequence, CIF
+from varidock.stages.af3_single_protein_predictor import (
     AF3SingleProteinPredictor,
     AF3SingleProteinPredictorConfig,
 )

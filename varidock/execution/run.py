@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Optional, Sequence, Mapping
 
-from docking.plans import RunPlan
+from varidock.plans import RunPlan
 
 
 @dataclass(frozen=True)

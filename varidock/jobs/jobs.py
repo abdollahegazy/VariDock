@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional, Sequence
 
-from docking.io.fasta import _read_single_fasta
+from varidock.io.fasta import _read_single_fasta
 
 @dataclass(frozen=True)
 class PredictionJob:
@@ -10,6 +10,7 @@ class PredictionJob:
     protein_sequences: Sequence[str]
     protein_chain_ids: Sequence[str]
     output_dir: Path
+    input_json_path: Path | None = None
     ligand_smiles: Optional[str] = None
     ligand_id: Optional[str] = None
     msa_paths: Optional[Sequence[Path]] = None

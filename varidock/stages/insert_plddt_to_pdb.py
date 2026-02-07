@@ -3,8 +3,8 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
-from docking.pipeline.types import PDB
-from docking.pipeline.stage import Stage
+from varidock.pipeline.types import PDB
+from varidock.pipeline.stage import Stage
 
 
 @dataclass

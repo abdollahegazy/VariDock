@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from docking.structure import MSAData
+from varidock.structure import MSAData
 
 
 def extract_msas_from_af3_output(af3_output_dir: Path) -> dict[str, MSAData]:

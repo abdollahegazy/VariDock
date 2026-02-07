@@ -4,11 +4,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Sequence
 
-from docking.io.af3_load import extract_msas_from_af3_output
-from docking.io.boltz_yaml import build_boltz_yaml
-from docking.jobs import PredictionJob
-from docking.plans import RunPlan
-from docking.runners.base import StructurePredictionRunner
+from varidock.io.af3_load import extract_msas_from_af3_output
+from varidock.io.boltz_yaml import build_boltz_yaml
+from varidock.jobs import PredictionJob
+from varidock.plans import RunPlan
+from varidock.runners.base import StructurePredictionRunner
 
 
 @dataclass(frozen=True)

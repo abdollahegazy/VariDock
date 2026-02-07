@@ -2,9 +2,9 @@ from dataclasses import dataclass
 from pathlib import Path
 import subprocess
 
-from docking.pipeline.types import Trajectory, ConformationSet, PDB
-from docking.pipeline.stage import Stage
-from docking.execution.utils import run_with_interrupt
+from varidock.pipeline.types import Trajectory, ConformationSet, PDB
+from varidock.pipeline.stage import Stage
+from varidock.execution.utils import run_with_interrupt
 
 @dataclass
 class VMDFrameExtractionConfig:

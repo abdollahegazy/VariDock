@@ -1,7 +1,7 @@
 from pathlib import Path
 import pytest
 
-from docking.jobs import PredictionJob
+from varidock.jobs import PredictionJob
 
 
 def test_job_valid():

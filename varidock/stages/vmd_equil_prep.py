@@ -3,9 +3,9 @@ from pathlib import Path
 import shutil
 import subprocess
 
-from docking.pipeline.types import PDB, NAMDSimulationDir
-from docking.pipeline.stage import Stage
-from docking.execution.utils import run_with_interrupt
+from varidock.pipeline.types import PDB, NAMDSimulationDir
+from varidock.pipeline.stage import Stage
+from varidock.execution.utils import run_with_interrupt
 
 @dataclass(frozen=True)
 class VMDEquilPrepConfig:

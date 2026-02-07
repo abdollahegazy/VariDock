@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from pathlib import Path
 
-from docking.plans import RunPlan
+from varidock.plans import RunPlan
 
 
 class PlanMaterializer(ABC):

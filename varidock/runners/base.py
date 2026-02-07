@@ -1,7 +1,7 @@
 # docking/runners/base.py
 from abc import ABC, abstractmethod
-from docking.jobs import PredictionJob
-from docking.plans import RunPlan
+from varidock.jobs import PredictionJob
+from varidock.plans import RunPlan
 
 
 class StructurePredictionRunner(ABC):

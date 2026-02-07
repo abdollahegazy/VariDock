@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from docking.pipeline.types import PDB, PDBQT
-from docking.pipeline.stage import Stage
-from docking.broker.adfr import prepare_receptor
+from varidock.pipeline.types import PDB, PDBQT
+from varidock.pipeline.stage import Stage
+from varidock.broker.adfr import prepare_receptor
 
 
 @dataclass
@@ -29,7 +29,8 @@ class ADFRReceptorPrep(Stage[PDB, PDBQT]):
 
     def run(self, input: PDB) -> PDBQT:
         output_path = self.config.output_dir / f"{input.path.stem}.pdbqt"
-
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        
         prepare_receptor(
             receptor_filename=str(input.path),
             outputfilename=str(output_path),

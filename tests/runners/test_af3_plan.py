@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from docking.jobs import PredictionJob
-from docking.runners.af3 import AF3Runner, AF3Config
+from varidock.jobs import PredictionJob
+from varidock.runners.af3 import AF3Runner, AF3Config
 
 
 def test_af3_plan_has_expected_paths(tmp_path: Path):

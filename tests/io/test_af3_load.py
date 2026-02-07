@@ -2,7 +2,7 @@
 import json
 import pytest
 
-from docking.io.af3_load import extract_msas_from_af3_output
+from varidock.io.af3_load import extract_msas_from_af3_output
 
 
 @pytest.fixture

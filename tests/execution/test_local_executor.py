@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from docking.plans import RunPlan
-from docking.execution import LocalExecutor
+from varidock.plans import RunPlan
+from varidock.execution import LocalExecutor
 
 
 def test_local_executor_materialize_run_validate(tmp_path: Path):

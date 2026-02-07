@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from docking.pipeline.types import CIF, PDB
-from docking.pipeline.stage import Stage
-from docking.execution.utils import run_with_interrupt
+from varidock.pipeline.types import CIF, PDB
+from varidock.pipeline.stage import Stage
+from varidock.execution.utils import run_with_interrupt
 
 
 @dataclass
@@ -31,7 +31,7 @@ class CIFToPDB(Stage[CIF, PDB]):
 
     def run(self, input: CIF) -> PDB:
         if self.config.output_dir:
-            pdb_path = self.config.output_dir / f"{input.path.stem}.pdb"
+            pdb_path = self.config.output_dir / f"{input.path.stem.removesuffix('_model')}.pdb"
         else:
             pdb_path = input.path.with_suffix(".pdb")
 

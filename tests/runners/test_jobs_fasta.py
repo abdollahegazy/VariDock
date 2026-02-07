@@ -1,7 +1,7 @@
 from pathlib import Path
 import pytest
 
-from docking.jobs import PredictionJob
+from varidock.jobs import PredictionJob
 
 
 def test_from_fasta_files_reads_sequence(tmp_path: Path):

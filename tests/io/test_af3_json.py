@@ -1,8 +1,8 @@
 from pathlib import Path
 import json
 
-from docking.jobs import PredictionJob
-from docking.io.af3_json import _build_af3_input_json
+from varidock.jobs import PredictionJob
+from varidock.io.af3_json import _build_af3_input_json
 
 
 def test_build_af3_input_json_shape_single_job():

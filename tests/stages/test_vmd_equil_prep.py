@@ -3,10 +3,10 @@ import pytest
 from unittest.mock import patch, MagicMock
 
 
-from docking.pipeline.types import PDB, NAMDSimulationDir
+from varidock.pipeline.types import PDB, NAMDSimulationDir
 # from docking.stages.vmd_equil_prep import NAMDEquilPrep, NAMDEquilPrepConfig
-from docking.stages.vmd_equil_prep import VMDEquilPrep as NAMDEquilPrep
-from docking.stages.vmd_equil_prep import VMDEquilPrepConfig as NAMDEquilPrepConfig
+from varidock.stages.vmd_equil_prep import VMDEquilPrep as NAMDEquilPrep
+from varidock.stages.vmd_equil_prep import VMDEquilPrepConfig as NAMDEquilPrepConfig
 class TestNAMDEquilPrep:
     """Tests for NAMD equilibration prep stage."""
 

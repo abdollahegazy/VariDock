@@ -1,4 +1,4 @@
-from docking.pipeline.stage import Stage
+from varidock.pipeline.stage import Stage
 
 
 class Pipeline:

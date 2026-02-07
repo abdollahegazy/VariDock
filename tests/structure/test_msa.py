@@ -1,6 +1,6 @@
 # add to tests/test_af3_load.py (or create tests/test_msa.py)
 import pytest
-from docking.structure import MSAData
+from varidock.structure import MSAData
 
 
 def test_write_unpaired_a3m(tmp_path):

@@ -3,8 +3,8 @@ import pytest
 from unittest.mock import patch, MagicMock
 from pathlib import Path
 
-from docking.pipeline.types import Trajectory, ConformationSet, PDB
-from docking.stages.vmd_frame_extract import (
+from varidock.pipeline.types import Trajectory, ConformationSet, PDB
+from varidock.stages.vmd_frame_extract import (
     VMDFrameExtraction,
     VMDFrameExtractionConfig,
 )

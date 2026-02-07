@@ -5,10 +5,10 @@ from pathlib import Path
 from typing import Sequence
 import os
 
-from docking.io import build_af3_input_json
-from docking.jobs import PredictionJob
-from docking.plans import RunPlan
-from docking.runners.base import StructurePredictionRunner
+from varidock.io import build_af3_input_json
+from varidock.jobs import PredictionJob
+from varidock.plans import RunPlan
+from varidock.runners.base import StructurePredictionRunner
 
 @dataclass(frozen=True)
 class AF3Config:
@@ -60,8 +60,13 @@ class AF3Runner(StructurePredictionRunner):
         script_name = script_path.name
         script_container_path = f"{self.cfg.container_runner_dir}/{script_name}"
 
+        if not job.input_json_path:
+            af3_json = build_af3_input_json(job)
+        else:
+            af3_json = job.input_json_path.read_text()
+
         files_text = {
-            json_host_path: build_af3_input_json(job),
+            json_host_path: af3_json,
             output_dir / ".keep": "",  # ensure output dir exists
             input_dir / ".keep": "",  # ensure input dir exists
         }
@@ -90,7 +95,7 @@ class AF3Runner(StructurePredictionRunner):
         ]
         argv += list(self.cfg.script_args)
 
-
+        files_text[input_dir / "singularity_log.sh"] = "\n".join(argv)
         expected_outputs = [output_dir 
         / job.name.lower()
         / f"{job.name.lower()}_model.cif"] # at least one output

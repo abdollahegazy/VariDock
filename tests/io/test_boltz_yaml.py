@@ -1,8 +1,8 @@
 from pathlib import Path
 import yaml
 
-from docking.io.boltz_yaml import build_boltz_yaml
-from docking.jobs import PredictionJob
+from varidock.io.boltz_yaml import build_boltz_yaml
+from varidock.jobs import PredictionJob
 
 
 def test_build_boltz_yaml_minimal(tmp_path):

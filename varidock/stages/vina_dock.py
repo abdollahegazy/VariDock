@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from docking.pipeline.types import DockingInput, DockingResult
-from docking.pipeline.stage import Stage
-from docking.broker.vina import dock
+from varidock.pipeline.types import DockingInput, DockingResult
+from varidock.pipeline.stage import Stage
+from varidock.broker.vina import dock
 
 
 @dataclass
@@ -24,7 +24,8 @@ class VinaDocking(Stage[DockingInput, DockingResult]):
 
     def __init__(self, config: VinaDockingConfig):
         self.config = config
-
+        self.config.output_dir.mkdir(parents=True, exist_ok=True)
+        
     def run(self, input: DockingInput) -> DockingResult:
         center = input.pocket_center
         prefix = f"c{input.conf_index}_p{input.pose_index}"
@@ -42,6 +43,7 @@ class VinaDocking(Stage[DockingInput, DockingResult]):
             if self.config.write_minimized
             else None
         )
+
 
         affinities = dock(
             receptor_pdbqt=str(input.receptor.path),
@@ -62,27 +64,29 @@ class VinaDocking(Stage[DockingInput, DockingResult]):
             scores=affinities,
         )
 
-from docking.pipeline.types import PDBQT, PocketCenter
-from pathlib import Path
+# from varidock.pipeline.types import PDBQT, PocketCenter
+# from pathlib import Path
 
-inp = DockingInput(
-    receptor=PDBQT(
-        path=Path(
-            "/serviceberry/tank/abdolla/SMBA/vina_pipeline_af3_proteins/05docking/Arabidopsis/a0a1i9lq90/protein_conf2.pdbqt"
-        )
-    ),
-    ligand=PDBQT(
-        path=Path(
-            "/serviceberry/tank/abdolla/SMBA/vina_pipeline_af3_proteins/05docking/Arabidopsis/a0a1i9lq90/514/ligand_conf2_pose0.pdbqt"
-        )
-    ),
-    pocket_center=PocketCenter(x=3.255, y=-13.652, z=3.466),
-    conf_index=2,
-    pose_index=0,
-)
-vina_dock = VinaDocking(config=VinaDockingConfig(output_dir=Path("./")))
-result = vina_dock.run(input=inp)
-print(result)
+# inp = DockingInput(
+#     receptor=PDBQT(
+#         path=Path(
+#             "/serviceberry/tank/abdolla/SMBA/vina_pipeline_af3_proteins/05docking/Arabidopsis/a0a1i9lq90/protein_conf2.pdbqt"
+#         )
+#     ),
+#     ligand=PDBQT(
+#         path=Path(
+#             "/serviceberry/tank/abdolla/SMBA/vina_pipeline_af3_proteins/05docking/Arabidopsis/a0a1i9lq90/514/ligand_conf2_pose0.pdbqt"
+#         )
+#     ),
+#     pocket_center=PocketCenter(x=3.255, y=-13.652, z=3.466),
+#     conf_index=2,
+#     pose_index=0,
+# )
+# vina_dock = VinaDocking(config=VinaDockingConfig(output_dir=Path("./")))
+# result = vina_dock.run(input=inp)
+# print(result)
+
+
 # VinaDocking.run()
 # from vina import Vina
 

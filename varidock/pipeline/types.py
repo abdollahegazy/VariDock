@@ -6,6 +6,7 @@ from typing import Sequence
 class ProteinSequence:
     sequence: str
     name: str
+    af3_msa_json_path: Path | None = None  # optional path for the MSA JSON file
 
 @dataclass
 class CIF:
@@ -76,8 +77,10 @@ class PocketSet:
 
 @dataclass
 class Ligand:
-    path: Path  # mol2 or pdb
     name: str
+    pdb: PDB | None = None
+    pdbqt: PDBQT | None = None
+
 
 @dataclass
 class DeepSurfPocketResult:

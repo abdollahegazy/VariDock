@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from docking.plans import RunPlan
-from docking.execution.materialize import PlanMaterializer, DefaultMaterializer
-from docking.execution.run import CommandRunner, LocalCommandRunner, CompletedRun
-from docking.execution.validate import PlanValidator, ExpectedOutputsValidator
+from varidock.plans import RunPlan
+from varidock.execution.materialize import PlanMaterializer, DefaultMaterializer
+from varidock.execution.run import CommandRunner, LocalCommandRunner, CompletedRun
+from varidock.execution.validate import PlanValidator, ExpectedOutputsValidator
 
 @dataclass
 class LocalExecutor:

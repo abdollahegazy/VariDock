@@ -5,7 +5,7 @@ from typing import Any, Optional, Sequence, List, Dict
 
 import yaml
 
-from docking.jobs import PredictionJob
+from varidock.jobs import PredictionJob
 
 
 def build_boltz_yaml(

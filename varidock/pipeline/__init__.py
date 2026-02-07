@@ -1,6 +1,6 @@
-from docking.pipeline.pipeline import Pipeline
-from docking.pipeline.stage import Stage
-from docking.pipeline.types import (
+from varidock.pipeline.pipeline import Pipeline
+from varidock.pipeline.stage import Stage
+from varidock.pipeline.types import (
     ProteinSequence,
     PDB,
     PDBQT,
