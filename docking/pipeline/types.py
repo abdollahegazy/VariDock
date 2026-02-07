@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Sequence
 
 @dataclass
 class ProteinSequence:
@@ -9,11 +10,12 @@ class ProteinSequence:
 @dataclass
 class CIF:
     path: Path
+    source_sequence: ProteinSequence | None = None
+
 
 @dataclass
 class PDB:
     path: Path
-    #source CIf path (useful if converted from CIF like from AF3)
     source_cif: Path | None = None  
 
 @dataclass
@@ -23,10 +25,13 @@ class PDBQT:
 @dataclass
 class PSF:
     path: Path
+    source_pdb: PDB | None = None   
 
 @dataclass
 class NAMDSimulationDir:
     path: Path  # contains system.psf, system.pdb, system.xsc, eq.namd, etc.
+    source_pdb: PDB | None = None
+
 
 @dataclass
 class SLURMPending:
@@ -38,18 +43,22 @@ class SLURMPending:
 class NAMDCheckpoint(SLURMPending):
     path: Path
     restart_prefix: str  # "eq", "eq2", etc.
+    source_namd_sim_dir: NAMDSimulationDir | None = None
     
+
 @dataclass
 class Trajectory(SLURMPending):
-    psf: Path
-    pdb: Path
-    coor_files: list[Path]
+    psf: PSF
+    pdb: PDB
+    coor_files: Sequence[Path]
+    source_checkpoint: NAMDCheckpoint | None = None
 
 
 @dataclass
 class ConformationSet:
     psf: Path
     pdbs: list[PDB]
+    source_trajectory: Trajectory | None = None
 
 
 @dataclass
@@ -62,7 +71,7 @@ class PocketCenter:
 @dataclass
 class PocketSet:
     conformation: PDB
-    centers: list[PocketCenter]
+    centers: Sequence[PocketCenter]
 
 
 @dataclass
@@ -74,8 +83,13 @@ class Ligand:
 @dataclass
 class DockingResult:
     output_path: Path
-    scores: list[float]
+    scores: Sequence[float]
 
+@dataclass
+class DeepSurfPocketResult:
+    pocket_dir: Path
+    centers_file: Path
+    source_pdb: PDB
 
 # === Composite inputs for multi-input stages ===
 

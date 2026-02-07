@@ -40,8 +40,11 @@ class NAMDProduction(Stage[NAMDCheckpoint, Trajectory]):
         else:
             run_with_interrupt([*self.config.local_command, "run.namd"], cwd=input.path)
 
-        coor_files = sorted(input.path.glob("run*.coor"))
-        return Trajectory(psf=input.path / "system.psf", coor_files=coor_files)
+        coor_files = sorted(input.path.glob("run[0-9][0-9][0-9].coor"))
+        return Trajectory(
+            pdb=input.path / "system.pdb",
+            psf=input.path / "system.psf", 
+            coor_files=coor_files)
 
     def submit(
         self, input: NAMDCheckpoint, depends_on: int | None = None
