@@ -7,7 +7,7 @@ def _sbatch(script: Path, depends_on: int | None = None) -> int:
     cmd = ["sbatch", "--parsable"]
     if depends_on:
         cmd += [f"--dependency=afterok:{depends_on}"]
-    cmd.append(str(script))
+    cmd.append(script.name)
     result = subprocess.run(
         cmd, capture_output=True, text=True, check=True, cwd=script.parent
     )
