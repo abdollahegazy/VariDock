@@ -129,7 +129,7 @@ jobs:
   pypi-publish:
     if: github.event_name == 'release'
     needs:
-      # - build
+      - build
       # - deploy-docs
     name: upload release to PyPI
     runs-on: ubuntu-latest
