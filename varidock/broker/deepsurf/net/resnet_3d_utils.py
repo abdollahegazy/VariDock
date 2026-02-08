@@ -1,8 +1,11 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
-"""Created on Thu Nov  1 17:04:52 2018
+"""Created on Thu Nov  1 17:04:52 2018.
 
 @author: smylonas
+
+Modified on Sat Feb 6 14:30:00 2026 by abdollahegazy
+to include TF2 compatibility.
 """
 
 import collections

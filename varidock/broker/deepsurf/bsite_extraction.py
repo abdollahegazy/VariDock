@@ -1,8 +1,11 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
-"""Created on Thu Jan 30 16:00:46 2020
+"""Created on Thu Jan 30 16:00:46 2020.
 
 @author: smylonas
+
+Modified on Sat Feb 6 14:30:00 2026 by abdollahegazy
+to include TF2 compatibility.
 """
 
 import numpy as np
@@ -10,7 +13,25 @@ from sklearn.cluster import MeanShift
 
 
 class Bsite_extractor():
+    """Extract binding sites from protein surface using clustering.
+
+    This class uses MeanShift clustering to identify potential binding sites
+    from ligandability scores computed on protein surface points.
+
+    Attributes:
+        T: Ligandability score threshold for filtering surface points.
+        ms: MeanShift clustering instance.
+
+    """
+
     def __init__(self,lig_thres,bw=15):
+        """Initialize the binding site extractor.
+
+        Args:
+            lig_thres: Ligandability score threshold for filtering surface points.
+            bw: Bandwidth parameter for MeanShift clustering. Defaults to 15.
+
+        """
         self.T = lig_thres
         self.ms = MeanShift(bandwidth=bw,bin_seeding=True,cluster_all=False,n_jobs=4)
     
@@ -42,6 +63,19 @@ class Bsite_extractor():
         return clusters
         
     def extract_bsites(self,prot,lig_scores):
+        """Extract binding sites from protein surface and store them.
+
+        Clusters high-ligandability surface points and adds identified
+        binding sites to the protein object.
+
+        Args:
+            prot: Protein object with surface points and bsite storage methods.
+            lig_scores: Array of ligandability scores for each surface point.
+
+        Returns:
+            None. Modifies prot in place by adding and writing binding sites.
+
+        """
         clusters = self._cluster_points(prot,lig_scores)
         if len(clusters)==0:
             print('No binding site found')

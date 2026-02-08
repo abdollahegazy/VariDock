@@ -17,7 +17,7 @@ class AF3SingleProteinPredictorConfig:
 
 
     @classmethod
-    def from_env(cls, output_dir: Path) -> "AF3SingleProteinPredictorConfig":
+    def from_config(cls, output_dir: Path) -> "AF3SingleProteinPredictorConfig":
         return cls(output_dir=output_dir)
 
 
@@ -30,7 +30,7 @@ class AF3SingleProteinPredictor(Stage[ProteinSequence, CIF]):
         self.config = config
 
     def run(self, input: ProteinSequence) -> CIF:
-        af3_config = AF3Config.from_env()
+        af3_config = AF3Config.from_config()
         af3_config = AF3Config(
             sif_path=af3_config.sif_path,
             model_dir=af3_config.model_dir,

@@ -40,9 +40,9 @@ jobs:
       # - name: Type check with mypy
         # run: >-
           # mypy varidock/
-      # - name: Run tests with pytest
-        # run: >-
-          # pytest
+      - name: Run tests with pytest
+        run: >-
+          pytest
 
   build:
     if: github.event_name == 'release'
@@ -129,7 +129,7 @@ jobs:
   pypi-publish:
     if: github.event_name == 'release'
     needs:
-      - build
+      # - build
       # - deploy-docs
     name: upload release to PyPI
     runs-on: ubuntu-latest

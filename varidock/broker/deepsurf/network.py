@@ -1,8 +1,11 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
-"""Created on Thu Jan 30 15:13:37 2020
+"""Created on Thu Jan 30 15:13:37 2020.
 
 @author: smylonas
+
+Modified on Sat Feb 6 14:30:00 2026 by abdollahegazy
+to include TF2 compatibility.
 """
 
 import os
@@ -22,7 +25,16 @@ from tensorflow.compat.v1.train import Saver # type: ignore
 disable_v2_behavior()
 
 class Network:
+
     def __init__(self,model_path,model,voxelSize):
+        """Initialize the neural network for binding site prediction.
+
+        Args:
+            model_path: Path to the directory containing saved model weights.
+            model: Model architecture type, either 'orig' or 'lds'.
+            voxelSize: Size of voxels in Angstroms for grid featurization.
+
+        """
         gridSize = 16
         reset_default_graph()
         
@@ -50,6 +62,17 @@ class Network:
         self.featurizer = KalasantyFeaturizer(gridSize,voxelSize)
         
     def get_lig_scores(self, prot, batch_size):
+        """Calculate ligandability scores for protein surface points.
+
+        Args:
+            prot: Protein object containing surface points, normals, heavy atom
+            coordinates, and molecular structure.
+            batch_size: Number of surface points to process in each batch.
+
+        Returns:
+            np.ndarray: Array of ligandability scores for each surface point.
+
+        """
         self.featurizer.get_channels(prot.mol)
 
         gridSize = 16

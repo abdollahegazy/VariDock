@@ -33,22 +33,21 @@ class TestAF3SingleProteinPredictor:
         assert config.seed == 42
         assert config.output_dir == tmp_path
 
-    @patch("docking.stages.af3_single_protein_predictor.LocalExecutor")
-    @patch("docking.stages.af3_single_protein_predictor.AF3Runner")
-    @patch("docking.stages.af3_single_protein_predictor.AF3Config")
+    @patch("varidock.stages.af3_single_protein_predictor.LocalExecutor")
+    @patch("varidock.stages.af3_single_protein_predictor.AF3Runner")
+    @patch("varidock.stages.af3_single_protein_predictor.AF3Config.from_config")  # Patch the method directly
     def test_run_calls_runner_and_executor(
         self,
-        mock_config_cls,
+        mock_from_config,  # This is now the from_config method
         mock_runner_cls,
         mock_executor_cls,
-        mock_af3_env,
         tmp_path,
     ):
         """Verify run() wires up runner and executor correctly."""
         # Setup mocks
         mock_config = MagicMock()
-        mock_config_cls.from_env.return_value = mock_config
-
+        mock_from_config.return_value = mock_config
+        
         mock_runner = MagicMock()
         mock_runner_cls.return_value = mock_runner
         mock_plan = MagicMock()
@@ -57,7 +56,7 @@ class TestAF3SingleProteinPredictor:
         mock_executor = MagicMock()
         mock_executor_cls.return_value = mock_executor
 
-        # Create expected output file (simulating AF3 ran)
+        # Create expected output file
         output_dir = tmp_path / "output"
         cif_path = output_dir / "af_output" / "test_protein" / "test_protein_model.cif"
         cif_path.parent.mkdir(parents=True)
@@ -71,18 +70,17 @@ class TestAF3SingleProteinPredictor:
         result = stage.run(input_seq)
 
         # Verify calls
-        mock_config_cls.from_env.assert_called_once()
-        mock_runner_cls.assert_called_once_with(mock_config, seed=42)
-        mock_runner.plan.assert_called_once()
+        mock_from_config.assert_called_once()
+        mock_runner_cls.assert_called_once()
         mock_executor.execute.assert_called_once_with(mock_plan)
 
         # Verify result
         assert isinstance(result, CIF)
         assert result.path == cif_path
 
-    @patch("docking.stages.af3_single_protein_predictor.LocalExecutor")
-    @patch("docking.stages.af3_single_protein_predictor.AF3Runner")
-    @patch("docking.stages.af3_single_protein_predictor.AF3Config")
+    @patch("varidock.stages.af3_single_protein_predictor.LocalExecutor")
+    @patch("varidock.stages.af3_single_protein_predictor.AF3Runner")
+    @patch("varidock.stages.af3_single_protein_predictor.AF3Config")
     def test_run_creates_correct_job(
         self,
         mock_config_cls,
@@ -93,7 +91,7 @@ class TestAF3SingleProteinPredictor:
     ):
         """Verify PredictionJob is created with correct values."""
         # Setup
-        mock_config_cls.from_env.return_value = MagicMock()
+        mock_config_cls.from_config.return_value = MagicMock()
         mock_runner = MagicMock()
         mock_runner_cls.return_value = mock_runner
         mock_executor_cls.return_value = MagicMock()

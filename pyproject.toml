@@ -35,5 +35,3 @@ testpaths = ["tests"]
 varidock = "varidock.cli:cli"
 
 [tool.ruff]
-# Ignore docstring rules for now
-ignore = ["D"]

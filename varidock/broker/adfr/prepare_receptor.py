@@ -1,3 +1,10 @@
+"""Prepare receptor structures for AutoDock4 docking.
+
+This module provides functionality to convert PDB/MOL2 receptor files
+to PDBQT format suitable for AutoDock4 docking simulations.
+"""
+
+
 import os
 
 from MolKit import Read

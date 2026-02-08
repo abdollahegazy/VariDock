@@ -136,8 +136,8 @@ class VMDEquilPrep(Stage[PDB, NAMDSimulationDir]):
             "solvated.log",
             "ionized.psf",
             "ionized.pdb",
-            "ionized.log",
-            "prep.tcl",
+            # "ionized.log",
+            # "prep.tcl",
         ]
         for f in intermediate_files:
             path = self.config.output_dir / f

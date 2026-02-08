@@ -11,6 +11,7 @@ def test_af3_plan_has_expected_paths(tmp_path: Path):
     
     (runner_dir / "ponderosa_run.py").write_text("# dummy\n")
 
+
     job = PredictionJob(
         name="4UIN",
         protein_sequences=["AAAA", "BBBB"],
@@ -22,8 +23,7 @@ def test_af3_plan_has_expected_paths(tmp_path: Path):
         sif_path=Path("/fake/af3.sif"),
         model_dir=Path("/fake/models"),
         db_dir=Path("/fake/db"),
-        runner_host_dir=runner_dir,  # Path, not str
-        runner_script="ponderosa_run.py",
+        runner_script=runner_dir / "ponderosa_run.py",
     )
 
     plan = AF3Runner(cfg).plan(job)
@@ -31,4 +31,4 @@ def test_af3_plan_has_expected_paths(tmp_path: Path):
 
     assert (job.output_dir / "af_input" / "4UIN.json") in plan.files_text
     assert plan.argv[0:2] == ["singularity", "exec"]
-    assert (job.output_dir / "af_output" / f"{job.name}_model.cif") in plan.expected_outputs
+    assert (job.output_dir / "af_output" / job.name.lower() / f"{job.name.lower()}_model.cif") in plan.expected_outputs

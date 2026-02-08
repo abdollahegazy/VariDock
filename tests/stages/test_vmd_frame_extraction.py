@@ -19,7 +19,7 @@ class TestVMDFrameExtraction:
         assert VMDFrameExtraction.output_type == ConformationSet
         assert VMDFrameExtraction.name == "vmd_frame_extraction"
 
-    @patch("docking.stages.vmd_frame_extract.run_with_interrupt")
+    @patch("varidock.stages.vmd_frame_extract.run_with_interrupt")
     def test_run_generates_tcl_script(self, mock_run, tmp_path):
         """Verify TCL script is generated with correct content."""
         # Setup
@@ -65,7 +65,7 @@ class TestVMDFrameExtraction:
         assert "-dispdev" in call_args
         assert "-eofexit" in call_args
 
-    @patch("docking.stages.vmd_frame_extract.run_with_interrupt")
+    @patch("varidock.stages.vmd_frame_extract.run_with_interrupt")
     def test_run_returns_conformation_set(self, mock_run, tmp_path):
         """Verify correct return type with PDBs."""
         output_dir = tmp_path / "output"
@@ -96,7 +96,7 @@ class TestVMDFrameExtraction:
         assert all(isinstance(p, PDB) for p in result.pdbs)
         assert result.pdbs[0].path == output_dir / "protein_conf0.pdb"
 
-    @patch("docking.stages.vmd_frame_extract.run_with_interrupt")
+    @patch("varidock.stages.vmd_frame_extract.run_with_interrupt")
     def test_run_loads_all_coor_files(self, mock_run, tmp_path):
         """Verify all coor files are added to TCL script."""
         output_dir = tmp_path / "output"
