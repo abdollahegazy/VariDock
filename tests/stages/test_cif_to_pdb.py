@@ -1,9 +1,14 @@
+import shutil
 import pytest
 from unittest.mock import patch
 
 from varidock.pipeline.types import CIF, PDB
 from varidock.stages.cif_to_pdb import CIFToPDB, CIFToPDBConfig
-from conftest import requires_obabel
+
+
+requires_obabel = pytest.mark.skipif(
+    shutil.which("obabel") is None, reason="obabel not found"
+)
 
 
 class TestCIFToPDB:
