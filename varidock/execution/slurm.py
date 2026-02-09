@@ -18,7 +18,7 @@ def get_slurm_queue_count() -> int:
     """Count current user's pending + running jobs.
     """
     result = subprocess.run(
-        ["squeue", "--me", "-h", "--format=%i"],
+        ["squeue", "--me", "-h","-r", "--format=%i"],
         capture_output=True,
         text=True,
         check=True,
