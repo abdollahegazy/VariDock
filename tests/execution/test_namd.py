@@ -28,16 +28,18 @@ def test_returns_none_for_no_velocity_lines(make_log):
     assert get_namd_ns(log) is None
 
 
-def test_restart_step(make_log):
+def test_restart_step_not_complete(make_log):
     log = make_log("WRITING VELOCITIES TO RESTART FILE AT STEP 500000\n")
-    ns = get_namd_ns(log)
+    ns, complete = get_namd_ns(log)
     assert ns == pytest.approx(1.0)
+    assert complete is False
 
 
-def test_output_step(make_log):
+def test_output_step_is_complete(make_log):
     log = make_log("WRITING VELOCITIES TO OUTPUT FILE AT STEP 250000\n")
-    ns = get_namd_ns(log)
+    ns, complete = get_namd_ns(log)
     assert ns == pytest.approx(0.5)
+    assert complete is True
 
 
 def test_uses_last_step(make_log):
@@ -46,14 +48,16 @@ def test_uses_last_step(make_log):
         "WRITING VELOCITIES TO RESTART FILE AT STEP 200000\n"
         "WRITING VELOCITIES TO RESTART FILE AT STEP 300000\n"
     )
-    ns = get_namd_ns(log)
+    ns, complete = get_namd_ns(log)
     assert ns == pytest.approx(0.6)
+    assert complete is False
 
 
 def test_custom_timestep(make_log):
     log = make_log("WRITING VELOCITIES TO RESTART FILE AT STEP 500000\n")
-    ns = get_namd_ns(log, timestep_fs=1.0)
+    ns, complete = get_namd_ns(log, timestep_fs=1.0)
     assert ns == pytest.approx(0.5)
+    assert complete is False
 
 
 def test_mixed_lines(make_log):
@@ -64,5 +68,26 @@ def test_mixed_lines(make_log):
         "WRITING VELOCITIES TO OUTPUT FILE AT STEP 250000\n"
         "ENERGY: 3000 -1236.0\n"
     )
-    ns = get_namd_ns(log)
+    ns, complete = get_namd_ns(log)
     assert ns == pytest.approx(0.5)
+    assert complete is True
+
+
+def test_restart_after_output_not_complete(make_log):
+    log = make_log(
+        "WRITING VELOCITIES TO OUTPUT FILE AT STEP 100000\n"
+        "WRITING VELOCITIES TO RESTART FILE AT STEP 200000\n"
+    )
+    ns, complete = get_namd_ns(log)
+    assert ns == pytest.approx(0.4)
+    assert complete is False
+
+
+def test_output_is_last_line_complete(make_log):
+    log = make_log(
+        "WRITING VELOCITIES TO RESTART FILE AT STEP 100000\n"
+        "WRITING VELOCITIES TO OUTPUT FILE AT STEP 200000\n"
+    )
+    ns, complete = get_namd_ns(log)
+    assert ns == pytest.approx(0.4)
+    assert complete is True
