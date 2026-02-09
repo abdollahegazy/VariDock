@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 from varidock.pipeline.types import CIF, PDB
 from varidock.stages.cif_to_pdb import CIFToPDB, CIFToPDBConfig
-from tests.conftest import requires_obabel
+from conftest import requires_obabel
 
 
 class TestCIFToPDB:
