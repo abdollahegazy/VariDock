@@ -11,6 +11,7 @@ requires_obabel = pytest.mark.skipif(
 )
 
 
+@requires_obabel
 class TestCIFToPDB:
     """Tests for CIF to PDB conversion stage."""
 
@@ -20,8 +21,8 @@ class TestCIFToPDB:
         assert CIFToPDB.output_type == PDB
         assert CIFToPDB.name == "cif_to_pdb"
 
-    def test_config_defaults(self):
         """Test default config values."""
+    def test_config_defaults(self):
         config = CIFToPDBConfig()
         assert config.output_dir is None
 
