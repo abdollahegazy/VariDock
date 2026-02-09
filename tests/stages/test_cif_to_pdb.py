@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 from varidock.pipeline.types import CIF, PDB
 from varidock.stages.cif_to_pdb import CIFToPDB, CIFToPDBConfig
+from tests.conftest import requires_obabel
 
 
 class TestCIFToPDB:
@@ -24,6 +25,7 @@ class TestCIFToPDB:
         config = CIFToPDBConfig(output_dir=tmp_path)
         assert config.output_dir == tmp_path
 
+    @requires_obabel
     @patch("varidock.stages.cif_to_pdb.run_with_interrupt")
     def test_run_writes_to_same_dir_when_no_output_dir(self, mock_run, tmp_path):
         """When output_dir is None, PDB is written next to input CIF."""
@@ -41,6 +43,7 @@ class TestCIFToPDB:
             ["obabel", str(cif_path), "-O", str(expected_pdb_path)]
         )
 
+    @requires_obabel
     @patch("varidock.stages.cif_to_pdb.run_with_interrupt")
     def test_run_writes_to_output_dir_when_specified(self, mock_run, tmp_path):
         """When output_dir is set, PDB is written there."""
