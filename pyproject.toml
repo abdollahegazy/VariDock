@@ -23,6 +23,7 @@ dev = [
     "mypy",
     "pdoc",
     "build",
+    "pyyaml",
 ]
 
 [tool.hatch.build.targets.wheel]
