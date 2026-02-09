@@ -23,3 +23,12 @@ def get_namd_ns(log_file: Path, timestep_fs: float = 2.0) -> Tuple[float, bool] 
         return None
 
     return step * timestep_fs * 1e-6,complete
+
+
+def is_namd_done(log_file: Path, target_ns: float, timestep_fs: float = 2.0) -> bool:
+    """Check if a NAMD simulation has completed to the target nanoseconds."""
+    result = get_namd_ns(log_file, timestep_fs)
+    if result is None:
+        return False
+    ns, complete = result
+    return complete and ns >= target_ns
