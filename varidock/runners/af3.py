@@ -28,14 +28,7 @@ class AF3Config:
     singularity_args: Sequence[str] = ("--nv",)
     script_args: Sequence[str] = ()
 
-    # @classmethod
-    # def from_env(cls) -> "AF3Config":
-    #     return cls(
-    #         sif_path=Path(os.environ["AF3_SIF_PATH"]),
-    #         model_dir=Path(os.environ["AF3_MODEL_DIR"]),
-    #         db_dir=Path(os.environ["AF3_DB_DIR"]),
-    #         runner_script=Path(os.environ["AF3_RUNNER_SCRIPT"]),
-    #     )
+
     @classmethod
     def from_config(cls, **overrides) -> "AF3Config":
         from varidock.config import VaridockConfig
@@ -71,7 +64,7 @@ class AF3Runner(StructurePredictionRunner):
         script_container_path = f"{self.cfg.container_runner_dir}/{script_name}"
 
         if not job.input_json_path:
-            af3_json = build_af3_input_json(job)
+            af3_json = build_af3_input_json(job)  # type: ignore
         else:
             af3_json = job.input_json_path.read_text()
 
@@ -105,10 +98,22 @@ class AF3Runner(StructurePredictionRunner):
         ]
         argv += list(self.cfg.script_args)
 
-        files_text[input_dir / "singularity_log.sh"] = "\n".join(argv)
-        expected_outputs = [output_dir 
-        / job.name.lower()
-        / f"{job.name.lower()}_model.cif"] # at least one output
+        files_text[input_dir / "singularity_log.sh"] = " \\\n    ".join(argv)
+
+        # When --norun_inference is set, AF3 only generates MSAs (no CIF output)
+        norun_inference = "--norun_inference" in self.cfg.script_args
+        if norun_inference:
+            expected_outputs = [
+                output_dir
+                / job.name.lower()
+                / f"{job.name.lower()}_data.json"
+            ]
+        else:
+            expected_outputs = [
+                output_dir
+                / job.name.lower()
+                / f"{job.name.lower()}_model.cif"
+            ]
 
         return RunPlan(
             work_dir=job.output_dir,

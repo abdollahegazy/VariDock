@@ -13,6 +13,7 @@ class PredictionJob:
     input_json_path: Path | None = None
     ligand_smiles: Optional[str] = None
     ligand_id: Optional[str] = None
+    ligand_ccd_code: Optional[str] = None
     msa_paths: Optional[Sequence[Path]] = None
     seed: Optional[int] = 42
     af3_output_dir: Optional[Path] = None

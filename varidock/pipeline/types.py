@@ -79,8 +79,11 @@ class PocketSet:
 @dataclass
 class Ligand:
     name: str
+    af3_sequence_id : str | None = None  # optional AF3 sequence ID for this ligand
     pdb: PDB | None = None
     pdbqt: PDBQT | None = None
+    ccd: str | None = None
+    smiles: str | None = None
 
 
 @dataclass
@@ -111,3 +114,26 @@ class DockingInput:
 class DockingResult:
     output_path: Path
     scores: Sequence[float]
+
+
+
+@dataclass
+class ComplexPredictionInput:
+    """
+    Input for multi-protein + single ligand structure prediction.
+    """
+
+    proteins: Sequence[ProteinSequence]
+    ligand: Ligand 
+    name: str | None = None  # optional complex name override   
+    af3_json : Path | None = None  # optional AF3 input JSON path override
+    
+    def __post_init__(self):
+        if not self.proteins:
+            raise ValueError("At least one ProteinSequence is required.")
+        if (self.ligand.smiles is None) and (self.ligand.ccd is None):
+            raise ValueError("Provide both ligand_smiles and ligand_id, or neither.")
+        if self.ligand.af3_sequence_id is None:
+            raise ValueError("ligand_id is required.")
+        if self.ligand.name is None:
+            raise ValueError("ligand name is required.")

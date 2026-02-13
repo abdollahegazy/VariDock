@@ -13,12 +13,18 @@ def get_namd_ns(log_file: Path, timestep_fs: float = 2.0) -> Tuple[float, bool] 
     with open(log_file) as f:
         for line in f:
             if "WRITING VELOCITIES TO RESTART FILE AT STEP" in line:
-                complete = False
-                step = int(line.strip().split()[-1])
+                try:
+                    step = int(line.strip().split()[-1])
+                    complete = False
+                except ValueError:
+                    continue  # truncated/corrupted line
             if "WRITING VELOCITIES TO OUTPUT FILE AT STEP" in line:
-                complete = True
-                step = int(line.strip().split()[-1])
-
+                try:
+                    step = int(line.strip().split()[-1])
+                    complete = True
+                except ValueError:
+                    continue  # truncated/corrupted line
+                
     if step is None:
         return None
 
