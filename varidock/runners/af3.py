@@ -28,19 +28,20 @@ class AF3Config:
     singularity_args: Sequence[str] = ("--nv",)
     script_args: Sequence[str] = ()
 
-
     @classmethod
     def from_config(cls, **overrides) -> "AF3Config":
         from varidock.config import VaridockConfig
+
         cfg = VaridockConfig.load()
         af3 = cfg.af3
         return cls(
-            sif_path=overrides.get("sif_path", af3.sif_path),
-            model_dir=overrides.get("model_dir", af3.model_dir),
-            db_dir=overrides.get("db_dir", af3.db_dir),
-            runner_script=overrides.get("runner_script", af3.runner_script),
+            sif_path=overrides.pop("sif_path", af3.sif_path),
+            model_dir=overrides.pop("model_dir", af3.model_dir),
+            db_dir=overrides.pop("db_dir", af3.db_dir),
+            runner_script=overrides.pop("runner_script", af3.runner_script),
+            **overrides,
         )
-
+        
 class AF3Runner(StructurePredictionRunner):
     name = "af3"
 

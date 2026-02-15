@@ -16,12 +16,18 @@ class AF3PredictionProtocol(Protocol):
     msa_paths: Optional[Sequence[Path]]  # if AF3 JSON consumes this
 
 def build_af3_input_json(job: AF3PredictionProtocol) -> str:
+    
     if len(job.protein_sequences) != len(job.protein_chain_ids):
         raise ValueError("PredictionJob.sequences and chain_ids must have same length")
-    if (job.ligand_smiles is not None) == (job.ligand_ccd_code is not None):
+
+    has_smiles = job.ligand_smiles is not None
+    has_ccd = job.ligand_ccd_code is not None
+
+    if has_smiles and has_ccd:
         raise ValueError("only one of ligand_smiles or ligand_ccd_code should be provided")
-    if job.ligand_id is None:
-        raise ValueError("ligand_id is required.")
+
+    if job.ligand_id is None and (has_smiles or has_ccd):
+        raise ValueError("ligand_id is required when ligand_smiles or ligand_ccd_code is provided.")
     
     sequences = []
     for chain_id, seq in zip(job.protein_chain_ids, job.protein_sequences):

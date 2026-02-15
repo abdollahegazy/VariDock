@@ -47,6 +47,15 @@ class PredictionJob:
             seed=seed,
         )
 
+    @classmethod
+    def from_json(cls, name:str | None, json_path: Path, output_dir: Path) -> "PredictionJob":
+        return cls(
+            name=name or json_path.stem,
+            output_dir=output_dir,
+            protein_sequences=[],
+            protein_chain_ids=[],
+            input_json_path=json_path,
+        )
     def __post_init__(self):
         if len(self.protein_chain_ids) != len(self.protein_sequences):
             raise ValueError("protein_chain_ids and protein_sequences must have the same length")

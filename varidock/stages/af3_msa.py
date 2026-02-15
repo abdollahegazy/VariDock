@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Tuple,List,Sequence
+from typing import List, Sequence
 from varidock.pipeline.types import CIF, ComplexPredictionInput
 from varidock.pipeline.stage import Stage
 from varidock.runners.af3 import AF3Runner, AF3Config
@@ -10,22 +10,21 @@ from varidock.execution import LocalExecutor
 CHAIN_IDS = [chr(i) for i in range(ord("A"), ord("Z") + 1)]
 
 @dataclass
-class AF3ComplexPredictorConfig:
+class AF3ComplexMSAConfig:
     output_dir: Path
     seed: int = 42
-    singularity_args: Tuple[str, ...] = ("--nv",)
+    singularity_args: Sequence[str] = ["--nv",]
     script_args: Sequence[str] = ()
     job_name: str | None = None
     chain_ids: List[str] | None = None
-    write_only: bool = False 
-    overwrite : bool = False
+    write_only: bool = False
+    overwrite: bool = False
 
     container_input_dir: str = "/root/af_input"
     container_output_dir: str = "/root/af_output"
-    
 
     @classmethod
-    def from_config(cls, output_dir: Path) -> "AF3ComplexPredictorConfig":
+    def from_config(cls, output_dir: Path) -> "AF3ComplexMSAConfig":
         return cls(output_dir=output_dir)
 
 
@@ -38,7 +37,7 @@ class AF3ComplexPredictor(Stage[ComplexPredictionInput, CIF]):
     input_type = ComplexPredictionInput
     output_type = CIF
 
-    def __init__(self, config: AF3ComplexPredictorConfig):
+    def __init__(self, config: AF3ComplexMSAConfig):
         self.config = config
 
     def _build_af3_config(self) -> AF3Config:
@@ -53,7 +52,6 @@ class AF3ComplexPredictor(Stage[ComplexPredictionInput, CIF]):
             container_input_dir=self.config.container_input_dir,
             container_output_dir=self.config.container_output_dir,
         )
-
 
     def run(self, input: ComplexPredictionInput) -> CIF:
         n = len(input.proteins)
@@ -99,7 +97,11 @@ class AF3ComplexPredictor(Stage[ComplexPredictionInput, CIF]):
         plan = runner.plan(job)
 
         executor = LocalExecutor()
-        executor.execute(plan, write_only=self.config.write_only, overwrite_inputs=self.config.overwrite)
+        executor.execute(
+            plan,
+            write_only=self.config.write_only,
+            overwrite_inputs=self.config.overwrite,
+        )
 
         cif_path = (
             self.config.output_dir
