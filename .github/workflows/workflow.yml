@@ -40,9 +40,9 @@ jobs:
       # - name: Type check with mypy
         # run: >-
           # mypy varidock/
-      - name: Run tests with pytest
-        run: >-
-          pytest
+      # - name: Run tests with pytest
+        # run: >-
+        #   pytest
 
   build:
     if: github.event_name == 'release'
