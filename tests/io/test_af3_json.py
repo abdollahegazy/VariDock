@@ -16,7 +16,15 @@ def test_build_af3_input_json_shape_single_job():
         seed=69
     )
 
-    s = build_af3_input_json(job)
+    seed:int = job.seed if job.seed is not None else 0
+    s = build_af3_input_json(
+        name=job.name,
+        sequences=job.protein_sequences,
+        chain_ids=job.protein_chain_ids,
+        seed=seed,
+        ligand_smiles=job.ligand_smiles,
+        ligand_id=job.ligand_id
+    )
     payload = json.loads(s)
 
     assert payload["name"] == "4UIN"

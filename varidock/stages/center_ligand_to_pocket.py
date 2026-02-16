@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 
 
-from varidock.pipeline.types import PDB, Ligand, LigandPrepInput
+from varidock.types import PDB, Ligand, LigandPrepInput
 from varidock.pipeline.stage import Stage
 
 
@@ -61,15 +61,18 @@ class CenterLigand(Stage[LigandPrepInput, LigandPrepInput]):
                 f.write(line)
 
 
-    def run(self, input: LigandPrepInput) -> PDB:
+    def run(self, input: LigandPrepInput) -> LigandPrepInput:
         center = input.pocket_center
         ligand = input.ligand
+
+        assert ligand.pdb is not None, "Ligand must have a PDB file for placement"
 
         output_path = (
             self.config.output_dir
             / f"ligand_c{input.conf_index}_p{input.pose_index}.pdb"
         )
         output_path.parent.mkdir(parents=True, exist_ok=True)
+
 
         self.place_ligand(
             ligand_file=str(ligand.pdb.path),

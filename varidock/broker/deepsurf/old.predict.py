@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """Created on Mon Jan 20 16:16:56 2020
-@author: smylonas
+@author: smylonas.
 """
 
 import argparse

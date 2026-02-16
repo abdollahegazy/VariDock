@@ -1,5 +1,6 @@
 import subprocess
 
+
 def run_with_interrupt(argv, **kwargs):
     process = subprocess.Popen(argv, **kwargs)  # start the process
     try:
@@ -9,7 +10,7 @@ def run_with_interrupt(argv, **kwargs):
         try:
             process.wait(timeout=5)  # wait up to 5 seconds
         except subprocess.TimeoutExpired:
-            process.kill()           # force kill if still alive
+            process.kill()  # force kill if still alive
             process.wait()
         raise  # re-raise the KeyboardInterrupt so Python exits
 

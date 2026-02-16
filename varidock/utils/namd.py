@@ -3,6 +3,7 @@
 from pathlib import Path
 from typing import Tuple
 
+
 def get_namd_ns(log_file: Path, timestep_fs: float = 2.0) -> Tuple[float, bool] | None:
     """Parse a NAMD log file and return the simulation progress in nanoseconds."""
     if not log_file.exists():
@@ -24,11 +25,11 @@ def get_namd_ns(log_file: Path, timestep_fs: float = 2.0) -> Tuple[float, bool] 
                     complete = True
                 except ValueError:
                     continue  # truncated/corrupted line
-                
+
     if step is None:
         return None
 
-    return step * timestep_fs * 1e-6,complete
+    return step * timestep_fs * 1e-6, complete
 
 
 def is_namd_done(log_file: Path, target_ns: float, timestep_fs: float = 2.0) -> bool:

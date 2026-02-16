@@ -19,8 +19,7 @@ class CIFToPDBConfig:
 
 
 class CIFToPDB(Stage[CIF, PDB]):
-    """Convert CIF structure file to PDB format using Open Babel.
-    """
+    """Convert CIF structure file to PDB format using Open Babel."""
 
     name = "cif_to_pdb"
     input_type = CIF

@@ -1,5 +1,5 @@
 """Original source of this file:
-from https://gitlab.com/cheminfIBB/tfbio
+from https://gitlab.com/cheminfIBB/tfbio.
 """
 
 import pickle
@@ -14,7 +14,7 @@ import collections
 
 class Featurizer():
     """Calcaulates atomic features for molecules. Features can encode atom type,
-    native pybel properties or any property defined with SMARTS patterns
+    native pybel properties or any property defined with SMARTS patterns.
 
     Attributes
     ----------
@@ -342,7 +342,7 @@ class Featurizer():
 
     @staticmethod
     def from_pickle(fname):
-        """Load pickled featurizer from a given file
+        """Load pickled featurizer from a given file.
 
         Parameters
         ----------
@@ -362,7 +362,7 @@ class Featurizer():
 
 
 def rotation_matrix(axis, theta):
-    """Counterclockwise rotation about a given axis by theta radians"""
+    """Counterclockwise rotation about a given axis by theta radians."""
     if not isinstance(axis, (np.ndarray, list, tuple)):
         raise TypeError('axis must be an array of floats of shape (3,)')
     try:
@@ -418,7 +418,7 @@ for t in [1, 2]:
 
 
 def rotate(coords, rotation):
-    """Rotate coordinates by a given rotation
+    """Rotate coordinates by a given rotation.
 
     Parameters
     ----------

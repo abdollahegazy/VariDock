@@ -8,7 +8,6 @@ from typing import Optional, Sequence
 
 from varidock.plans import RunPlan
 
-
 @dataclass(frozen=True)
 class CompletedRun:
     returncode: int
@@ -31,7 +30,7 @@ class LocalCommandRunner(CommandRunner):
         env = os.environ.copy()
         if plan.env:
             env.update({k: str(v) for k, v in plan.env.items()})
-
+    
         proc = subprocess.run(
             list(plan.argv),
             cwd=str(plan.work_dir),

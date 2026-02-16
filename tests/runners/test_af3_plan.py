@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from varidock.jobs import PredictionJob
-from varidock.runners.af3 import AF3Runner, AF3Config
+from varidock.runners.af3 import AF3Config, plan_af3
 
 
 def test_af3_plan_has_expected_paths(tmp_path: Path):
@@ -26,7 +26,7 @@ def test_af3_plan_has_expected_paths(tmp_path: Path):
         runner_script=runner_dir / "ponderosa_run.py",
     )
 
-    plan = AF3Runner(cfg).plan(job)
+    plan = plan_af3(cfg, job)
 
 
     assert (job.output_dir / "af_input" / "4UIN.json") in plan.files_text

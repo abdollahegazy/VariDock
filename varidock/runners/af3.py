@@ -1,22 +1,46 @@
+"""AF3 runner and plan builder for Singularity execution.
+
+Defines AF3Config for container paths and arguments, and a function to build a RunPlan
+for executing AF3 with the specified configuration.
+"""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
 
-from varidock.io import build_af3_input_json
-from varidock.jobs import PredictionJob
+
 from varidock.plans import RunPlan
-from varidock.runners.base import StructurePredictionRunner
 
 @dataclass(frozen=True)
 class AF3Config:
+    """Configuration for running AF3 via Singularity.
+
+    Attributes:
+        sif_path (Path): Path to the AF3 Singularity image.
+        model_dir (Path): Host path to AF3 model parameters.
+        db_dir (Path): Host path to genetic databases.
+        runner_script (Path): Host path to run_alphafold.py.
+        python_entrypoint (str): Python binary inside the container.
+        singularity_args (Sequence[str]): Extra args for singularity exec.
+        script_args (Sequence[str]): Extra args for run_alphafold.py.
+        container_input_dir (str): Container mount point for input JSON.
+        container_output_dir (str): Container mount point for AF3 output.
+        container_model_dir (str): Container mount point for model parameters.
+        container_db_dir (str): Container mount point for genetic databases.
+        container_runner_dir (str): Container mount point for run_alphafold.py.
+
+    """
+
     sif_path: Path
     model_dir: Path
     db_dir: Path
     runner_script: Path
 
     python_entrypoint: str = "python"
+    singularity_args: Sequence[str] = ("--nv",)
+    script_args: Sequence[str] = ()
 
     # Inside-container mount points
     container_input_dir: str = "/root/af_input"
@@ -25,11 +49,16 @@ class AF3Config:
     container_db_dir: str = "/root/public_databases"
     container_runner_dir: str = "/root/runner"
 
-    singularity_args: Sequence[str] = ("--nv",)
-    script_args: Sequence[str] = ()
 
     @classmethod
     def from_config(cls, **overrides) -> "AF3Config":
+        """Create an AF3Config instance by loading defaults from VaridockConfig and applying overrides.
+        
+        :param cls: The AF3Config class itself (automatically passed by @classmethod).
+        :param overrides: Keyword arguments to override default configuration values loaded from VaridockConfig.
+        :return: An instance of AF3Config with values taken from VaridockConfig and overridden by any provided arguments.
+        :rtype: AF3Config
+        """
         from varidock.config import VaridockConfig
 
         cfg = VaridockConfig.load()
@@ -42,84 +71,77 @@ class AF3Config:
             **overrides,
         )
         
-class AF3Runner(StructurePredictionRunner):
-    name = "af3"
 
-    def __init__(self, cfg: AF3Config, seed: int = 1):
-        self.cfg = cfg
 
-    
-    def plan(self, job: PredictionJob) -> RunPlan:
-        input_dir = job.output_dir / "af_input"
-        output_dir = job.output_dir / "af_output"
+def plan_af3(
+        cfg: AF3Config,
+        name: str,
+        input_json: str,
+        output_dir: Path
+        ) -> RunPlan:
+    """Build a RunPlan for a single AF3 execution.
 
-        json_host_path = input_dir / f"{job.name}.json"
-        json_container_path = f"{self.cfg.container_input_dir}/{job.name}.json"
+    Args:
+        cfg (AF3Config): Singularity and AF3 configuration.
+        name (str): Job name (used for file naming).
+        input_json (str): AF3 input JSON content as a string.
+        output_dir (Path): Root output directory (af_input/ and af_output/ created inside).
 
-        script_path = self.cfg.runner_script.resolve()
-        if not script_path.exists():
-            raise FileNotFoundError(f"Runner script not found: {script_path}")
+    Returns:
+        RunPlan: Ready-to-execute plan with argv, files, and expected outputs.
 
-        script_host_dir = script_path.parent
-        script_name = script_path.name
-        script_container_path = f"{self.cfg.container_runner_dir}/{script_name}"
+    Raises:
+        FileNotFoundError: If the runner script does not exist.
 
-        if not job.input_json_path:
-            af3_json = build_af3_input_json(job)  # type: ignore
-        else:
-            af3_json = job.input_json_path.read_text()
+    """
+    input_dir = output_dir / "af_input"
+    af_output = output_dir / "af_output"
 
-        files_text = {
-            json_host_path: af3_json,
-            output_dir / ".keep": "",  # ensure output dir exists
-            input_dir / ".keep": "",  # ensure input dir exists
-        }
+    script_path = cfg.runner_script.resolve()
+    if not script_path.exists():
+        raise FileNotFoundError(f"AlphaFold runner python script not found: {script_path}")
 
-        argv = ["singularity", "exec"]
-        argv += list(self.cfg.singularity_args)
+    files = {
+        input_dir / f"{name}.json": input_json,
+        input_dir / ".keep": "",
+        af_output / ".keep": "",
+    }
 
-        argv += [
-            "--bind",
-            f"{input_dir}:{self.cfg.container_input_dir}",
-            "--bind",
-            f"{output_dir}:{self.cfg.container_output_dir}",
-            "--bind",
-            f"{self.cfg.model_dir}:{self.cfg.container_model_dir}",
-            "--bind",
-            f"{self.cfg.db_dir}:{self.cfg.container_db_dir}",
-            "--bind",
-            f"{script_host_dir}:{self.cfg.container_runner_dir}",
-            str(self.cfg.sif_path),
-            self.cfg.python_entrypoint,
-            script_container_path,
-            f"--json_path={json_container_path}",
-            f"--model_dir={self.cfg.container_model_dir}",
-            f"--db_dir={self.cfg.container_db_dir}",
-            f"--output_dir={self.cfg.container_output_dir}",
-        ]
-        argv += list(self.cfg.script_args)
+    binds = {
+        input_dir: cfg.container_input_dir,
+        af_output: cfg.container_output_dir,
+        cfg.model_dir: cfg.container_model_dir,
+        cfg.db_dir: cfg.container_db_dir,
+        script_path.parent: cfg.container_runner_dir,
+    }
 
-        files_text[input_dir / "singularity_log.sh"] = " \\\n    ".join(argv)
+    argv = ["singularity", "exec", *cfg.singularity_args]
+    for host, container in binds.items():
+        argv += ["--bind", f"{host}:{container}"]
 
-        # When --norun_inference is set, AF3 only generates MSAs (no CIF output)
-        norun_inference = "--norun_inference" in self.cfg.script_args
-        if norun_inference:
-            expected_outputs = [
-                output_dir
-                / job.name.lower()
-                / f"{job.name.lower()}_data.json"
-            ]
-        else:
-            expected_outputs = [
-                output_dir
-                / job.name.lower()
-                / f"{job.name.lower()}_model.cif"
-            ]
+    argv += [
+        str(cfg.sif_path),
+        cfg.python_entrypoint,
+        f"{cfg.container_runner_dir}/{script_path.name}",
+        f"--json_path={cfg.container_input_dir}/{name}.json",
+        f"--model_dir={cfg.container_model_dir}",
+        f"--db_dir={cfg.container_db_dir}",
+        f"--output_dir={cfg.container_output_dir}",
+        *cfg.script_args,
+    ]
 
-        return RunPlan(
-            work_dir=job.output_dir,
-            files_text=files_text,
-            argv=argv,
-            expected_outputs=expected_outputs,
-            env=None,
-        )
+    files[input_dir / "singularity_log.sh"] = " \\\n    ".join(argv)
+
+    # When --norun_inference is set, AF3 only generates MSAs (no CIF output)
+    norun_inference = "--norun_inference" in cfg.script_args
+    suffix = "_data.json" if norun_inference else "_model.cif"
+    expected = [af_output / name.lower() / f"{name.lower()}{suffix}"]
+
+
+    return RunPlan(
+        work_dir=output_dir,
+        files_text=files,
+        argv=argv,
+        expected_outputs=expected,
+        env=None,
+    )

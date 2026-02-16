@@ -1,5 +1,5 @@
 """Created on Thu Jan 30 12:45:54 2020
-@author: smylonas
+@author: smylonas.
 """
 
 import os

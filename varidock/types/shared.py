@@ -4,9 +4,19 @@ from typing import Sequence
 
 @dataclass
 class ProteinSequence:
+    """Represents a protein sequence with an optional AF3 MSA JSON path.
+
+    Attributes:
+        sequence (str): Amino acid sequence of the protein.
+        name (str): Name or identifier of the protein.
+        af3_msa_json_path (Path | None): Optional path to the AF3 MSA JSON file.
+
+    """
+
     sequence: str
     name: str
     af3_msa_json_path: Path | None = None  # optional path for the MSA JSON file
+
 
 @dataclass
 class CIF:
@@ -17,16 +27,19 @@ class CIF:
 @dataclass
 class PDB:
     path: Path
-    source_cif: Path | None = None  
+    source_cif: Path | None = None
+
 
 @dataclass
 class PDBQT:
     path: Path
 
+
 @dataclass
 class PSF:
     path: Path
-    source_pdb: PDB | None = None   
+    source_pdb: PDB | None = None
+
 
 @dataclass
 class NAMDSimulationDir:
@@ -46,7 +59,7 @@ class NAMDCheckpoint(SLURMPending):
     path: Path
     restart_prefix: str  # "eq", "eq2", etc.
     source_namd_sim_dir: NAMDSimulationDir | None = None
-    
+
 
 @dataclass
 class Trajectory(SLURMPending):
@@ -79,7 +92,7 @@ class PocketSet:
 @dataclass
 class Ligand:
     name: str
-    af3_sequence_id : str | None = None  # optional AF3 sequence ID for this ligand
+    af3_sequence_id: str | None = None  # optional AF3 sequence ID for this ligand
     pdb: PDB | None = None
     pdbqt: PDBQT | None = None
     ccd: str | None = None
@@ -92,7 +105,9 @@ class DeepSurfPocketResult:
     centers_file: Path
     source_pdb: PDB
 
+
 # === Composite inputs for multi-input stages ===
+
 
 @dataclass
 class LigandPrepInput:
@@ -100,6 +115,7 @@ class LigandPrepInput:
     pocket_center: PocketCenter
     conf_index: int
     pose_index: int
+
 
 @dataclass
 class DockingInput:
@@ -116,18 +132,15 @@ class DockingResult:
     scores: Sequence[float]
 
 
-
 @dataclass
 class ComplexPredictionInput:
-    """
-    Input for multi-protein + single ligand structure prediction.
-    """
+    """Input for multi-protein + single ligand structure prediction."""
 
     proteins: Sequence[ProteinSequence]
-    ligand: Ligand 
-    name: str | None = None  # optional complex name override   
-    af3_json : Path | None = None  # optional AF3 input JSON path override
-    
+    ligand: Ligand
+    name: str | None = None  # optional complex name override
+    af3_json: Path | None = None  # optional AF3 input JSON path override
+
     def __post_init__(self):
         if not self.proteins:
             raise ValueError("At least one ProteinSequence is required.")
