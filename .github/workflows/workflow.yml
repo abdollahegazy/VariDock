@@ -119,6 +119,9 @@ jobs:
           name: pdoc-docs
           path: _build/
 
+      - name: Add root redirect
+        run: echo '<meta http-equiv="refresh" content="0;url=varidock.html">' > _build/index.html
+        
       - name: Deploy documentation
         uses: JamesIves/github-pages-deploy-action@v4
         with:
