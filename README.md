@@ -2,7 +2,7 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/varidock.svg)](https://pypi.python.org/pypi/varidock/)
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/varidock.svg)](https://pypi.python.org/pypi/varidock/)
-[![Docs](https://img.shields.io/badge/docs-gh--pages-brightgreen?logo=github)](https://lonelyneutrin0.github.io/varidock/)
+[![Docs](https://img.shields.io/badge/docs-gh--pages-brightgreen?logo=github)](https://abdollahegazy.github.io/varidock/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 A modular pipeline for cross-species protein–ligand virtual screening, combining structure prediction, molecular dynamics, pocket detection, and ensemble docking into a reproducible, HPC-ready workflow.
@@ -27,7 +27,7 @@ pip install varidock
 For development:
 
 ```bash
-git clone https://github.com/lonelyneutrin0/varidock.git
+git clone https://github.com/abdollahegazy/varidock.git
 cd varidock
 pip install -e ".[dev]"
 ```
@@ -152,6 +152,6 @@ If you use VariDock in your research, please cite:
 ```
 @software{varidock,
   title={VariDock: Cross-species protein-ligand virtual screening pipeline},
-  url={https://github.com/lonelyneutrin0/varidock},
+  url={https://github.com/abdollahegazy/varidock},
 }
 ```
