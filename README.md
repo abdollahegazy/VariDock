@@ -2,7 +2,7 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/varidock.svg)](https://pypi.python.org/pypi/varidock/)
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/varidock.svg)](https://pypi.python.org/pypi/varidock/)
-[![Docs](https://img.shields.io/badge/docs-gh--pages-brightgreen?logo=github)](https://abdollahegazy.github.io/varidock/)
+[![Docs](https://img.shields.io/badge/docs-gh--pages-brightgreen?logo=github)](https://abdollahegazy.github.io/VariDock/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 A modular pipeline for cross-species protein–ligand virtual screening, combining structure prediction, molecular dynamics, pocket detection, and ensemble docking into a reproducible, HPC-ready workflow.
