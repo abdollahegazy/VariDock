@@ -1,5 +1,0 @@
-- make stand alone docking stages (currently have protein predictors)
-- rename docking to varidock in import
-- standardize test directory
-- data provenance & return typings
-- submitter paradigm for large-scale single step vs rapid multi-step
