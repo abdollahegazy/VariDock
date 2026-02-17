@@ -117,7 +117,7 @@ def plan_af3(
 
     argv = ["singularity", "exec", *cfg.singularity_args]
     for host, container in binds.items():
-        argv += ["--bind", f"{host}:{container}"]
+        argv += ["--bind", f"{Path(host).resolve()}:{container}"]
 
     argv += [
         str(cfg.sif_path),

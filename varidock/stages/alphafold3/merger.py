@@ -126,15 +126,19 @@ class AF3MSAMerger:
                 sequences.append({"ligand": lig_entry})
 
         payload = {
+            "dialect": "alphafold3",
+            "version": 4,
             "name": name,
             "sequences": sequences,
             "modelSeeds": [self.config.seed],
-            "dialect": "alphafold3",
-            "version": 1,
+            "bondedAtomPairs": None,
+            "userCCD": None,
         }
 
-        out_path = self.config.output_dir / name / f"{name}.json"
+        out_path = self.config.output_dir / name / "af_input" / f"{name}.json"
         out_path.parent.mkdir(parents=True, exist_ok=True)
+        af_out_path = self.config.output_dir / name / "af_output"
+        af_out_path.mkdir(parents=True, exist_ok=True)
         out_path.write_text(json.dumps(payload, indent=2) + "\n")
 
-        return AF3MergedInput(json_path=out_path, name=name)
+        return AF3MergedInput(json_path=out_path, name=name, output_dir=None)

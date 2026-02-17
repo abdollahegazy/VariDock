@@ -2,6 +2,7 @@ from .alphafold3 import (
     AF3MSAInput,
     AF3MergedInput,
     AF3MSAOutput,
+    AF3InferenceOutput
 )
 from .shared import(
     ProteinSequence,
@@ -29,6 +30,7 @@ __all__ = [
     "AF3MSAInput",
     "AF3MergedInput",
     "AF3MSAOutput",
+    "AF3InferenceOutput",
     "ProteinSequence",
     "CIF",
     "PDB",

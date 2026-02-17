@@ -1,6 +1,20 @@
 from dataclasses import dataclass
 from pathlib import Path
 
+@dataclass
+class AF3InferenceOutput:
+    """Output from AF3 inference stage.
+
+    Attributes:
+        cif_path (Path): Path to the predicted structure CIF file.
+        data_json_path (Path): Path to the AF3 output JSON containing MSA and template info.
+        source_json_path (Path): Path to the input JSON used for this inference run.
+
+    """
+
+    cif_path: Path
+    data_json_path: Path | None
+    source_json_path: Path | None
 
 @dataclass
 class AF3MergedInput:
@@ -9,11 +23,12 @@ class AF3MergedInput:
     Attributes:
         json_path (Path): Path to the merged AF3 input JSON.
         name (str): Job name for this complex.
-
+        output_dir (Path | None): Root output directory for this AF3 run. Can be none when this is used to merge JSONs without running inference.
     """
 
     json_path: Path
     name: str
+    output_dir: Path | None
 
 
 @dataclass
