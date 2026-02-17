@@ -63,13 +63,13 @@ class AF3MSA(Stage[AF3MSAInput, AF3MSAOutput]):
             cfg=self.af3_config,
             name=input.protein_id,
             input_json=input_json,
-            output_dir=input.output_dir,
+            output_dir=input.output_dir.resolve(),  # ensure absolute path
         )
 
         self.executor.execute(plan, write_only=self.write_only,overwrite_inputs=self.overwrite_input)
 
         data_json = (
-            input.output_dir
+            input.output_dir.resolve()
             / "af_output"
             / input.protein_id.lower()
             / f"{input.protein_id.lower()}_data.json"
