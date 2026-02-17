@@ -135,7 +135,7 @@ def plan_af3(
     # When --norun_inference is set, AF3 only generates MSAs (no CIF output)
     norun_inference = "--norun_inference" in cfg.script_args
     suffix = "_data.json" if norun_inference else "_model.cif"
-    expected = [af_output / name.lower() / f"{name.lower()}{suffix}"]
+    expected = [af_output / name / f"{name}{suffix}"]
 
 
     return RunPlan(
