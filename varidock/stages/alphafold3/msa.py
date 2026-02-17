@@ -71,8 +71,8 @@ class AF3MSA(Stage[AF3MSAInput, AF3MSAOutput]):
         data_json = (
             input.output_dir.resolve()
             / "af_output"
-            / input.protein_id.lower()
-            / f"{input.protein_id.lower()}_data.json"
+            / input.protein_id
+            / f"{input.protein_id}_data.json"
         )
 
         if not self.write_only and not data_json.exists():
