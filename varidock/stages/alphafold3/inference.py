@@ -58,7 +58,7 @@ class AF3Inference(Stage[AF3MergedInput, AF3InferenceOutput]):
         """
         assert input.output_dir is not None, "AF3Inference requires an output directory in the input to run inference. For merging without inference, use AF3MSAMerger directly."
         
-        input_json = input.json_path.read_text()
+        input_json = input.json_path.resolve().read_text()
 
         plan = plan_af3(
             cfg=self.af3_config,
