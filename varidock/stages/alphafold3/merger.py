@@ -47,6 +47,7 @@ class AF3MSAMerger:
         msa_outputs: Sequence[AF3MSAOutput],
         ligands: Sequence[Ligand] | None = None,
         name: str | None = None,
+        return_json_only: bool = False,
     ) -> AF3MergedInput:
         """Merge monomer MSA JSONs into a single multimer input JSON.
 
@@ -135,6 +136,11 @@ class AF3MSAMerger:
             "userCCD": None,
         }
 
+        if return_json_only:
+            json_text = json.dumps(payload, indent=2) + "\n"
+            return AF3MergedInput(json_path=Path("."), name=json_text, output_dir=None)
+        
+    
         out_path = self.config.output_dir / name / "af_input" / f"{name}.json"
         out_path.parent.mkdir(parents=True, exist_ok=True)
         af_out_path = self.config.output_dir / name / "af_output"
