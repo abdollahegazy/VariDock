@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from varidock.pipeline.types import PDBQT, Ligand, LigandPrepInput
+from varidock.types import PDBQT, Ligand, LigandPrepInput
 from varidock.pipeline.stage import Stage
 from varidock.broker.meeko import prepare_ligand
 
@@ -22,6 +22,9 @@ class MeekoLigandPrep(Stage[LigandPrepInput, LigandPrepInput]):
         self.config = config
 
     def run(self, input: LigandPrepInput) -> LigandPrepInput    :
+        
+        assert input.ligand.pdb is not None, "Input ligand must have a PDB file for Meeko preparation"
+
         output_path = self.config.output_dir / f"{input.ligand.pdb.path.stem}.pdbqt"
         output_path.parent.mkdir(parents=True, exist_ok=True)
         

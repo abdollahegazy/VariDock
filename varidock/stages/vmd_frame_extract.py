@@ -2,15 +2,13 @@ from dataclasses import dataclass
 from pathlib import Path
 import subprocess
 
-from varidock.pipeline.types import Trajectory, ConformationSet, PDB
+from varidock.types import Trajectory, ConformationSet, PDB
 from varidock.pipeline.stage import Stage
-from varidock.execution.utils import run_with_interrupt
+from varidock.utils import run_with_interrupt
 
 @dataclass
 class VMDFrameExtractionConfig:
     output_dir: Path
-    # add more as needed
-
 
 class VMDFrameExtraction(Stage[Trajectory, ConformationSet]):
     name = "vmd_frame_extraction"
@@ -26,15 +24,16 @@ class VMDFrameExtraction(Stage[Trajectory, ConformationSet]):
         # 3. Select protein atoms
         # 4. Write each frame as PDB
         # 5. Return ConformationSet with list of PDBs
+        self.config.output_dir = self.config.output_dir.resolve()
+        self.config.output_dir.mkdir(parents=True, exist_ok=True)
 
-        
         tcl = f"""
-            set molid [mol new "{input.psf}"]
-            mol addfile {input.pdb} $molid
+            set molid [mol new "{input.psf.path.resolve()}"]
+            mol addfile {input.pdb.path.resolve()} $molid
             """
         
         for coor in input.coor_files:
-            tcl += f'mol addfile "{coor}" $molid\n'
+            tcl += f'mol addfile "{coor.resolve()}" $molid\n'
         
         tcl += f"""
         package require topotools
@@ -59,9 +58,11 @@ class VMDFrameExtraction(Stage[Trajectory, ConformationSet]):
 
         with open(self.config.output_dir / "vmd_frame_extraction.log", "w") as f:
             run_with_interrupt(
-                ["vmd", "-dispdev", "none", "-eofexit", "-e", str(script_path)], 
-                stdout=f, 
-                stderr=subprocess.STDOUT)
+                ["vmd", "-dispdev", "none", "-eofexit", "-e", str(script_path)],
+                stdout=f,
+                stderr=subprocess.STDOUT,
+                cwd=self.config.output_dir,
+            )
             
         pdb_files = sorted(self.config.output_dir.glob("protein_conf*.pdb"))
         return ConformationSet(

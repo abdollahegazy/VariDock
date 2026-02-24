@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from varidock.pipeline.types import DockingInput, DockingResult
+from varidock.types import DockingInput, DockingResult
 from varidock.pipeline.stage import Stage
 from varidock.broker.vina import dock
 

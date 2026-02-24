@@ -1,18 +1,13 @@
-"""Broker module for external tool integrations.
+"""Broker module for external tool integrations."""
 
-This module provides interfaces to various external tools used in the
-molecular docking pipeline, including:
+from __future__ import annotations
+from typing import TYPE_CHECKING
 
-- ADFR Suite for receptor preparation
-- DeepSurf for binding site prediction
-- Meeko for ligand preparation
-- Vina for molecular docking
-"""
-
-from varidock.broker.adfr import prepare_receptor
-from varidock.broker.deepsurf import predict
-from varidock.broker.meeko import meeko
-from varidock.broker.vina import vina
+if TYPE_CHECKING:
+    from varidock.broker.adfr import prepare_receptor
+    from varidock.broker.deepsurf import predict
+    from varidock.broker.meeko import meeko
+    from varidock.broker.vina import vina
 
 __all__ = [
     "prepare_receptor",
@@ -20,3 +15,23 @@ __all__ = [
     "meeko",
     "vina",
 ]
+
+
+def __getattr__(name):
+    if name == "prepare_receptor":
+        from varidock.broker.adfr import prepare_receptor
+
+        return prepare_receptor
+    elif name == "predict":
+        from varidock.broker.deepsurf import predict
+
+        return predict
+    elif name == "meeko":
+        from varidock.broker.meeko import meeko
+
+        return meeko
+    elif name == "vina":
+        from varidock.broker.vina import vina
+
+        return vina
+    raise AttributeError(f"module 'varidock.broker' has no attribute {name}")

@@ -1,15 +1,18 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from varidock.pipeline.types import PDB, DeepSurfPocketResult
+from varidock.types import PDB, DeepSurfPocketResult
 from varidock.pipeline.stage import Stage
 from varidock.broker.deepsurf import predict
+from varidock.config import VaridockConfig
+
+cfg = VaridockConfig.load()
 
 @dataclass
 class DeepSurfPocketConfig:
-    model_dir: Path
     output_dir: Path
-    
+    model_dir: Path | None = cfg.deepsurf.model_dir
+
     # DeepSurf params
     model: str = "orig"  # 'orig' or 'lds'
     f: int = 10  # simplification of points mesh

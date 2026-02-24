@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from varidock.pipeline.types import PDB, PDBQT
+from varidock.types import PDB, PDBQT
 from varidock.pipeline.stage import Stage
 from varidock.broker.adfr import prepare_receptor
 

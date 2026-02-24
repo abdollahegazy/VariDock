@@ -8,6 +8,8 @@ Modified on Sat Feb 6 14:30:00 2026 by abdollahegazy
 to include TF2 compatibility.
 """
 
+import os
+
 import numpy as np
 from sklearn.cluster import MeanShift
 
@@ -78,7 +80,10 @@ class Bsite_extractor():
         """
         clusters = self._cluster_points(prot,lig_scores)
         if len(clusters)==0:
-            print('No binding site found')
+            if not os.path.exists(prot.save_path):
+                os.makedirs(prot.save_path)
+                print('No binding site found')
+            np.savetxt(os.path.join(prot.save_path,'centers.txt'), np.array([]), delimiter=' ', fmt='%10.3f')
             return
         for cluster in clusters:
             prot.add_bsite(cluster)
