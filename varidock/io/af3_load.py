@@ -4,35 +4,32 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from varidock.structure import MSAData
+from varidock.types import MSAData
 
 
-def extract_msas_from_af3_output(af3_output_dir: Path) -> dict[str, MSAData]:
-    """Extract MSA data for all proteins in an AF3 output directory.
-
-    Returns: {chain_id: MSAData}
+def extract_msas_from_af3_output(data_json: Path) -> tuple[MSAData, str] | None:
     """
-    af3_output_dir = Path(af3_output_dir)
+    Extract MSA data and protein sequence from an AF3 output JSON file.
+    Note, this currently expects single protein JSONs with a single sequence within them.
 
-    data_files = sorted(af3_output_dir.glob("*_data.json"))
-    if not data_files:
-        raise FileNotFoundError(f"No *_data.json found in {af3_output_dir}")
+    Returns:
+        Tuple of (MSAData, sequence) or None if no protein found.
+    """
 
-    data = json.loads(data_files[0].read_text())
+    if not data_json.exists():
+        raise FileNotFoundError(f"No *_data.json found in {data_json}")
 
-    result = {}
+    data = json.loads(data_json.read_text())
+
     for seq in data.get("sequences", []):
         protein = seq.get("protein")
         if protein is None:
             continue
 
-        chain_id = protein.get("id")
-        if isinstance(chain_id, list):
-            chain_id = chain_id[0]  # AF3 uses ["A"] format
-
-        result[chain_id] = MSAData(
+        msa = MSAData(
             paired=protein.get("pairedMsa"),
             unpaired=protein.get("unpairedMsa"),
         )
+        return msa, protein.get("sequence", "")
 
-    return result
+    return None

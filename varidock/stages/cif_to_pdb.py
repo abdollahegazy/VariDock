@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from varidock.pipeline.types import CIF, PDB
+from varidock.types import CIF, PDB
 from varidock.pipeline.stage import Stage
-from varidock.execution.utils import run_with_interrupt
+from varidock.utils import run_with_interrupt
 
 
 @dataclass

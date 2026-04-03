@@ -2,6 +2,7 @@ from .alphafold3.input_builder import AF3InputBuilder
 from .alphafold3.msa import AF3MSA
 from .alphafold3.merger import AF3MSAMerger, AF3MSAMergerConfig
 from .alphafold3.inference import AF3Inference
+from .boltz.boltz import BoltzPredict, BoltzConfig
 
 __all__ = [
     "AF3InputBuilder",
@@ -9,4 +10,6 @@ __all__ = [
     "AF3MSAMerger",
     "AF3MSAMergerConfig",
     "AF3Inference",
+    "BoltzPredict",
+    "BoltzConfig"
 ]

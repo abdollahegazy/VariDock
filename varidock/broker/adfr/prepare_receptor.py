@@ -111,7 +111,7 @@ def prepare_receptor(
         mol,
         mode,
         repairs,
-        charges_to_add,
+        charges_to_add, #type: ignore
         cleanup,
         outputfilename=outputfilename,
         preserved=preserved,

@@ -48,5 +48,12 @@ __all__ = [
     "LigandPrepInput",
     "DockingInput",
     "DockingResult",
-    "ComplexPredictionInput",
+    "ComplexPredictionInput",   
 ]
+
+from .boltz import MSAData, BoltzInput, BoltzOutput
+__all__.extend([
+    "MSAData",
+    "BoltzInput",
+    "BoltzOutput",
+                ])

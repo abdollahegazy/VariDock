@@ -15,7 +15,7 @@ def dock(
     scoring_function: str = "vina",
 ) -> list[float]:
     """Run AutoDock Vina docking. Returns list of affinity scores."""
-    v = Vina(sf_name=scoring_function)
+    v = Vina(sf_name=scoring_function, cpu=2, verbosity=0)
     v.set_receptor(receptor_pdbqt)
     v.set_ligand_from_file(ligand_pdbqt)
     v.compute_vina_maps(center=list(center), box_size=list(box_size))
@@ -40,5 +40,8 @@ def dock(
         f.write("-----+------------+----------+----------\n")
         for i, e in enumerate(energies):
             f.write(f"   {i + 1:2d}      {e[0]:7.3f}     {e[1]:6.4f}     {e[2]:6.3f}\n")
+
+        f.write("COMPLETED\n")
+        f.close()
 
     return affinities
