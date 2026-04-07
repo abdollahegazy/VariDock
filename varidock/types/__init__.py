@@ -51,9 +51,10 @@ __all__ = [
     "ComplexPredictionInput",   
 ]
 
-from .boltz import MSAData, BoltzInput, BoltzOutput
+from .boltz import MSAData, BoltzInput, BoltzOutput,BoltzInputMulti
 __all__.extend([
     "MSAData",
     "BoltzInput",
+    "BoltzInputMulti",
     "BoltzOutput",
                 ])

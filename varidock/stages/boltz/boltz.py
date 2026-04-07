@@ -4,7 +4,7 @@ import os
 
 from varidock.pipeline.stage import Stage
 from varidock.io.af3_load import extract_msas_from_af3_output
-from varidock.io.boltz_yaml import build_boltz_yaml
+from varidock.io.boltz_yaml import _build_boltz_yaml_single_prot
 from varidock.types import BoltzInput, BoltzOutput
 # from varidock.types.shared import Ligand
 from varidock.utils import run_with_interrupt
@@ -48,7 +48,7 @@ class BoltzPredict(Stage[BoltzInput, BoltzOutput]):
         msa_path = input_dir / f"{input.protein_chain_id}_unpaired.a3m"
         msa.write_unpaired_a3m(msa_path)
 
-        yaml_str = build_boltz_yaml(
+        yaml_str = _build_boltz_yaml_single_prot(
             protein_sequence=sequence,
             protein_chain_id=input.protein_chain_id,
             msa_path=msa_path,

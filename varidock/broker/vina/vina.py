@@ -26,9 +26,11 @@ def dock(
     if output_minimize:
         v.write_pose(output_minimize, overwrite=True)
 
+    print(f"Docking with exhaustiveness={exhaustiveness} and dock_n_poses={dock_n_poses}...")
+
     v.dock(exhaustiveness=exhaustiveness, n_poses=dock_n_poses)
     v.write_poses(output_poses, n_poses=write_n_poses, overwrite=True)
-
+    print(f"Docking completed. Best score: {score_after:.3f} kcal/mol")
     energies = v.energies(n_poses=dock_n_poses)
     affinities = [e[0] for e in energies]
 

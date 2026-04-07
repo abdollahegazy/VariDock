@@ -26,7 +26,7 @@ def prepare_ligand(
         # write protonated file for RDKit to read
         protonated_file = str(output_dir / f"{Path(ligand_file).stem}_protonated{ext}")
         conv.WriteFile(obmol, protonated_file)
-        print("got all the way here")
+        # print("got all the way here")
         ligand_file = protonated_file
 
     if ext == ".mol2":

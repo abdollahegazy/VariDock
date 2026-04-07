@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
+from typing import Dict, Optional
 
 from varidock.types import (
-    AF3InferenceOutput,
+    # AF3InferenceOutput,
     Ligand,
-    ProteinSequence
+    # ProteinSequence
     )
 
 
@@ -54,6 +54,16 @@ class BoltzInput:
     name: str
 
 @dataclass
+class BoltzInputMulti:
+    # Mapping from chain ID to data JSON path
+    data_json_paths: Dict[str, Path]  
+    ligand: Ligand
+    output_dir: Path
+    name: str
+    
+
+
+@dataclass
 class BoltzOutput:
     output_dir: Path
-    source_input: BoltzInput
+    source_input: BoltzInput | BoltzInputMulti
