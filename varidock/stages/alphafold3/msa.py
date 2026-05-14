@@ -6,6 +6,7 @@ from varidock.runners.af3 import AF3Config, plan_af3
 from varidock.execution import LocalExecutor
 from varidock.types import AF3MSAInput, AF3MSAOutput
 
+from varidock.execution.slurm import SlurmExecutor,SlurmConfig
 
 class AF3MSA(Stage[AF3MSAInput, AF3MSAOutput]):
     """Run AF3 data pipeline (MSA + template search) for a single monomer.
@@ -44,7 +45,7 @@ class AF3MSA(Stage[AF3MSAInput, AF3MSAOutput]):
         self.write_only = write_only
         self.overwrite_input = overwrite_input
 
-    def run(self, input: AF3MSAInput) -> AF3MSAOutput:
+    def run(self, input: AF3MSAInput,ensure_valid_out=False) -> AF3MSAOutput:
         """Run AF3 MSA/data pipeline for a single protein.
 
         Args:
@@ -75,7 +76,7 @@ class AF3MSA(Stage[AF3MSAInput, AF3MSAOutput]):
             / f"{input.protein_id}_data.json"
         )
 
-        if not self.write_only and not data_json.exists():
+        if ensure_valid_out and not data_json.exists():
             raise FileNotFoundError(f"AF3 MSA output not found: {data_json}")
 
         return AF3MSAOutput(

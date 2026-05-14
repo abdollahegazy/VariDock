@@ -27,18 +27,17 @@ class SlurmConfig:
 
     """
 
+    cpus: int
+    mem: str 
+    gpus: int = 0
     account: str = "vermaaslab"
     time: str = "4:0:0"
     gres_flags: Sequence[str] = ("--gres-flags=enforce-binding",)
-    cpus: int
-    gpus: int
-    mem: str 
-    gpu_type: str
+    gpu_type: str = ""
     nodes: int = 1
     ntasks_per_node:int = 1
     extra_sbatch: Sequence[str] = ()
     modules: Sequence[str] = ()
-    job_name: str | None = None 
     script_name: str = "submit.sh"
 
 
@@ -71,7 +70,7 @@ class SlurmExecutor:
 
         self.materializer.materialize(plan,overwrite=overwrite_inputs)
         script_path = plan.work_dir / self.config.script_name
-        script_path.write_text(self._build_script())
+        script_path.write_text(self._build_script(plan))
         script_path.chmod(0o755)
 
         if not write_only:
@@ -89,7 +88,7 @@ class SlurmExecutor:
 
         return script_path
 
-    def _build_script(self) -> str:
+    def _build_script(self,plan:RunPlan,job_name="") -> str:
         """
         Build the SLURM batch script content.
         Args:
@@ -100,34 +99,39 @@ class SlurmExecutor:
         cfg = self.config
         lines = [
             "#!/bin/bash --login",
-            f"#SBATCH -C [{cfg.gpu_type}]",
-            f"#SBATCH --gres=gpu:{cfg.gpus}",
             f"#SBATCH --cpus-per-task={cfg.cpus}",
-            f"#SBATCH --gpus-per-task={cfg.gpus}",
             f"#SBATCH --nodes={cfg.nodes}",
             f"#SBATCH --ntasks-per-node={cfg.ntasks_per_node}",
             f"#SBATCH --mem={cfg.mem}",
             f"#SBATCH --time={cfg.time}",
-            f"#SBATCH --account={cfg.account}" 
-            f"#SBATCH --job-name={cfg.job_name}",
+            f"#SBATCH --account={cfg.account}",
+            f"#SBATCH --job-name={job_name}" if job_name else "",
         ]
+
+        if cfg.gpus > 0:
+            lines.extend([
+            f"#SBATCH -C [{cfg.gpu_type}]",
+            f"#SBATCH --gres=gpu:{cfg.gpus}",
+            f"#SBATCH --gpus-per-task={cfg.gpus}",
+            ])
 
         for extra in cfg.extra_sbatch:
             lines.append(f"#SBATCH {extra}")
 
-        for gres_extra in cfg.gres_flags:
-            lines.append(f"#SBATCH {gres_extra}")
+        # for gres_extra in cfg.gres_flags:
+        #     lines.append(f"#SBATCH {gres_extra}")
 
         for mod in cfg.modules:
             lines.append(f"module {mod}")
         
+        if plan.env:
+            for k, v in plan.env.items():
+                lines.append(f"export {k}={v}")
+            lines.append("")
 
-        # if plan.env:
-            # for k, v in plan.env.items():
-            #     lines.append(f"export {k}={v}")
-            # lines.append("")
-
-        # lines.append(" \\\n    ".join(plan.argv))
+        lines.append(" \\\n    ".join(plan.argv))
         # lines.append("")
+
+        # print("\n".join(lines))
 
         return "\n".join(lines)
