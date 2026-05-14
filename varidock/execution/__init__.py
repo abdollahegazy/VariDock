@@ -2,7 +2,7 @@ from .materialize import PlanMaterializer, DefaultMaterializer
 from .run import CommandRunner, LocalCommandRunner, CompletedRun
 from .validate import PlanValidator, ExpectedOutputsValidator
 from .local import LocalExecutor
-
+from .slurm import SlurmConfig,SlurmExecutor
 
 __all__ = [
     "PlanMaterializer",
@@ -13,4 +13,6 @@ __all__ = [
     "PlanValidator",
     "ExpectedOutputsValidator",
     "LocalExecutor",
+    "SlurmExecutor",
+    "SlurmConfig"
 ]
