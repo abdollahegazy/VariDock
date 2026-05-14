@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
+
 from pathlib import Path
 from typing import Sequence
 
@@ -20,17 +23,22 @@ class SlurmConfig:
 
     """
 
-    partition: str = "general"
-    time: str = "04:00:00"
-    cpus: int = 8
-    mem: str = "64G"
-    gpus: int = 0
-    gpu_type: str | None = None
-    modules: Sequence[str] = ()
+    account: str = "vermaaslab"
+    time: str = "4:0:0"
+    gres_flags: Sequence[str] = ("--gres-flags=enforce-binding",)
+    cpus: int
+    gpus: int
+    mem: str 
+    gpu_type: str
+    nodes: int = 1
+    ntasks_per_node:int = 1
     extra_sbatch: Sequence[str] = ()
-    account : str | None = None
+    modules: Sequence[str] = ()
+    job_name: str | None = None
 
 
+
+@dataclass
 class SlurmExecutor:
     """Execute a RunPlan by submitting a SLURM batch job.
 
@@ -44,7 +52,7 @@ class SlurmExecutor:
 
     def execute(
         self,
-        plan: "RunPlan",
+        plan: RunPlan,
         write_only: bool = False,
         overwrite_inputs: bool = False,
     ) -> Path:
@@ -84,50 +92,47 @@ class SlurmExecutor:
 
         return script_path
 
-    def _build_script(self, plan: "RunPlan") -> str:
-        """Build the SLURM batch script content.
-
+    def _build_script(self, plan: RunPlan) -> str:
+        """
+        Build the SLURM batch script content.
         Args:
             plan (RunPlan): Execution plan to generate script for.
-
         Returns:
             str: Complete SLURM batch script as a string.
-
         """
         cfg = self.config
         lines = [
             "#!/bin/bash --login",
-            f"#SBATCH --job-name={plan.work_dir.name}",
-            f"#SBATCH --output={plan.work_dir / 'slurm-%j.out'}",
-            f"#SBATCH --error={plan.work_dir / 'slurm-%j.err'}",
-            f"#SBATCH --partition={cfg.partition}",
-            f"#SBATCH --time={cfg.time}",
+            f"#SBATCH -C [{cfg.gpu_type}]",
+            f"#SBATCH --gres=gpu:{cfg.gpus}",
             f"#SBATCH --cpus-per-task={cfg.cpus}",
+            f"#SBATCH --gpus-per-task={cfg.gpus}",
+            f"#SBATCH --nodes={cfg.nodes}",
+            f"#SBATCH --ntasks-per-node={cfg.ntasks_per_node}",
             f"#SBATCH --mem={cfg.mem}",
-            f"#SBATCH --account={cfg.account}" if hasattr(cfg, "account") else "",
+            f"#SBATCH --time={cfg.time}",
+            f"#SBATCH --account={cfg.account}" 
+            f"#SBATCH --job-name={cfg.job_name}",
         ]
-
-        if cfg.gpus > 0:
-            gpu_str = f"{cfg.gpu_type}:{cfg.gpus}" if cfg.gpu_type else str(cfg.gpus)
-            lines.append(f"#SBATCH --gres=gpu:{gpu_str}")
 
         for extra in cfg.extra_sbatch:
             lines.append(f"#SBATCH {extra}")
 
-        lines.append("")
+        for gres_extra in cfg.gres_flags:
+            lines.append(f"#SBATCH {gres_extra}")
+        # lines.append("")
 
         for mod in cfg.modules:
-            lines.append(f"module load {mod}")
+            lines.append(f"module {mod}")
+        
+        # lines.append("")
 
-        if cfg.modules:
-            lines.append("")
+        # if plan.env:
+            # for k, v in plan.env.items():
+            #     lines.append(f"export {k}={v}")
+            # lines.append("")
 
-        if plan.env:
-            for k, v in plan.env.items():
-                lines.append(f"export {k}={v}")
-            lines.append("")
-
-        lines.append(" \\\n    ".join(plan.argv))
-        lines.append("")
+        # lines.append(" \\\n    ".join(plan.argv))
+        # lines.append("")
 
         return "\n".join(lines)
