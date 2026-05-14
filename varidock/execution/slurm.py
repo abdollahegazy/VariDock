@@ -7,6 +7,10 @@ from typing import Sequence
 
 from varidock.plans import RunPlan
 
+from varidock.execution.materialize import PlanMaterializer, DefaultMaterializer
+# from varidock.execution.run import CommandRunner, LocalCommandRunner, CompletedRun
+from varidock.execution.validate import PlanValidator, ExpectedOutputsValidator
+
 @dataclass
 class SlurmConfig:
     """SLURM job configuration.
@@ -34,18 +38,15 @@ class SlurmConfig:
     ntasks_per_node:int = 1
     extra_sbatch: Sequence[str] = ()
     modules: Sequence[str] = ()
-    job_name: str | None = None
+    job_name: str | None = None 
+    script_name: str = "submit.sh"
 
 
 
-@dataclass
+# @dataclass
 class SlurmExecutor:
-    """Execute a RunPlan by submitting a SLURM batch job.
-
-    Attributes:
-        config (SlurmConfig): SLURM resource configuration.
-
-    """
+    materializer: PlanMaterializer = DefaultMaterializer()
+    validator: PlanValidator = ExpectedOutputsValidator()
 
     def __init__(self, config: SlurmConfig):
         self.config = config
@@ -67,14 +68,10 @@ class SlurmExecutor:
             Path: Path to the generated SLURM batch script.
 
         """
-        # Write plan files (input JSONs, .keep dirs, etc.)
-        for path, content in plan.files_text.items():
-            if overwrite_inputs or not path.exists():
-                path.parent.mkdir(parents=True, exist_ok=True)
-                path.write_text(content)
 
-        script_path = plan.work_dir / "submit.sh"
-        script_path.write_text(self._build_script(plan))
+        self.materializer.materialize(plan,overwrite=overwrite_inputs)
+        script_path = plan.work_dir / self.config.script_name
+        script_path.write_text(self._build_script())
         script_path.chmod(0o755)
 
         if not write_only:
@@ -92,7 +89,7 @@ class SlurmExecutor:
 
         return script_path
 
-    def _build_script(self, plan: RunPlan) -> str:
+    def _build_script(self) -> str:
         """
         Build the SLURM batch script content.
         Args:
@@ -120,12 +117,10 @@ class SlurmExecutor:
 
         for gres_extra in cfg.gres_flags:
             lines.append(f"#SBATCH {gres_extra}")
-        # lines.append("")
 
         for mod in cfg.modules:
             lines.append(f"module {mod}")
         
-        # lines.append("")
 
         # if plan.env:
             # for k, v in plan.env.items():
